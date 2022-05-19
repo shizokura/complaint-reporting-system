@@ -1,0 +1,21 @@
+.crud
+{
+    padding: 50px;
+    &__header
+    {
+        .title
+        {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+    }
+    &__body
+    {
+        a
+        {
+            text-decoration: none;
+            color: #1976D2;
+        }
+    }
+}

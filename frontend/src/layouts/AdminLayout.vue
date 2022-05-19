@@ -25,12 +25,21 @@
                     NAVIGATION
                 </q-item-label>
 
-                <q-item clickable>
+                <q-item @click="goTo('admin_dashboard')" clickable>
                     <q-item-section avatar>
                         <q-icon name="home" />
                     </q-item-section>
                     <q-item-section>
                         <q-item-label>Dashboard</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-item @click="goTo('admin_users')" clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-account" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Users</q-item-label>
                     </q-item-section>
                 </q-item>
 
@@ -52,9 +61,11 @@
 </template>
 
 <script>
+import './AdminLayout.scss';
+
 export default
 {
-    name: 'MainLayout',
+    name: 'AdminLayout',
     data: () => 
     ({
         leftDrawerOpen: false
@@ -75,6 +86,11 @@ export default
     },
     methods:
     {
+        goTo(name)
+        {
+            this.$router.push({ name });
+            this.leftDrawerOpen = false;
+        },
         logout()
         {
             localStorage.removeItem('user_data');
