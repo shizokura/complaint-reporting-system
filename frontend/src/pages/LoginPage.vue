@@ -139,6 +139,22 @@ export default
 
             this.is_loading = false;
         }
+    },
+    created()
+    {
+        if (localStorage.getItem('user_data'))
+        {
+            let user_data = JSON.parse(localStorage.getItem('user_data'));
+
+            if (user_data.role === 'Admin')
+            {
+                this.$router.push({ name: 'admin_dashboard' });
+            }
+            else if (user_data.role === 'Member')
+            {
+                this.$router.push({ name: 'member_dashboard' });
+            }
+        }
     }
 }
 </script>
