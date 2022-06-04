@@ -1,0 +1,36 @@
+.member-dashboard
+{
+    padding: 25px;
+    &__title
+    {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+        color: rgba(0,0,0,0.80);
+    }
+    &__body
+    {
+        .summary
+        {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            text-align: center;
+            column-gap: 50px;
+            &__item
+            {
+                border: 1px solid #1976D2;
+                padding: 15px;
+                border-radius: 5px;
+                color: #1976D2;
+                .icon
+                {
+                    
+                }  
+                .name
+                {
+
+                } 
+            }
+        }
+    }
+}

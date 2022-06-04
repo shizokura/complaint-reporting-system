@@ -1,17 +1,19 @@
 <template>
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated>
+    <q-layout class="main-layout" view="lHh Lpr lFf">
+        <q-header unelevated>
             <q-toolbar>
-                <q-btn
+                <!-- <q-btn
                     flat
                     dense
                     round
                     icon="menu"
                     aria-label="Menu"
                     @click="leftDrawerOpen = !leftDrawerOpen"
-                />
-                <q-toolbar-title>
-                    Complaint Reporting System
+                /> -->
+                <q-toolbar-title style="text-align: right; font-size: 14px;">
+                    <q-btn icon="mdi-bell" unelevated style="margin-right: 15px;" />
+                    {{ user_data.full_name }}
+                    <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
                 </q-toolbar-title>
             </q-toolbar>
         </q-header>
@@ -20,11 +22,13 @@
             v-model="leftDrawerOpen"
             bordered
         >
-            <q-list>
-                <q-item-label header>
-                    NAVIGATION
-                </q-item-label>
+            <q-item-label header style="text-align: center; font-size: 2rem; font-weight: 700;">
+                e-CRS
+            </q-item-label>
 
+            <q-separator />
+
+            <q-list style="padding: 15px;">
                 <q-item clickable>
                     <q-item-section avatar>
                         <q-icon name="home" />
@@ -34,12 +38,21 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item @click="logout()" clickable>
+                <q-item clickable>
                     <q-item-section avatar>
-                        <q-icon name="mdi-logout-variant" />
+                        <q-icon name="mdi-pencil" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>Logout</q-item-label>
+                        <q-item-label>Create Complaint</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-item clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-history" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Complaint History</q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -52,12 +65,15 @@
 </template>
 
 <script>
+import './MainLayout.scss';
+
 export default
 {
     name: 'MainLayout',
     data: () => 
     ({
-        leftDrawerOpen: false
+        leftDrawerOpen: true,
+        user_data: null
     }),
     created()
     {
@@ -72,6 +88,8 @@ export default
         {
             this.$router.push({ name: 'admin_dashboard' });
         }
+
+        this.user_data = user_data;
     },
     methods:
     {
