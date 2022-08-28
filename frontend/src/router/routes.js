@@ -21,7 +21,10 @@ const routes =
         children: 
         [
             { name: 'admin_dashboard', path: '', component: () => import('src/pages/Admin/AdminDashboard.vue') },
-            { name: 'admin_users', path: 'users', component: () => import('src/pages/Admin/AdminUsers.vue') }
+            { name: 'admin_users', path: 'users', component: () => import('src/pages/Admin/AdminUsers.vue') },
+            { name: 'admin_complaint_pending', path: '/complaint/pending', component: () => import('pages/Admin/AdminComplaintPending.vue') },
+            { name: 'admin_complaint_process', path: '/complaint/process', component: () => import('pages/Admin/AdminComplaintProcess.vue') },
+            { name: 'admin_complaint_closed', path: '/complaint/closed', component: () => import('pages/Admin/AdminComplaintClosed.vue') }
         ]
     },
 

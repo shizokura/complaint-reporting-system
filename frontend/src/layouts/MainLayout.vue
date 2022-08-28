@@ -29,7 +29,7 @@
             <q-separator />
 
             <q-list style="padding: 15px;">
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'member_dashboard' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="home" />
                     </q-item-section>
@@ -38,21 +38,52 @@
                     </q-item-section>
                 </q-item>
 
+                <q-expansion-item
+                    icon="mdi-alert"
+                    label="Complaints"
+                >
+                    <q-item @click="$router.push({ name: 'member_complaint_pending' })" clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>Pending</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>In-Process</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>Closed</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                </q-expansion-item>
+
                 <q-item clickable>
                     <q-item-section avatar>
-                        <q-icon name="mdi-pencil" />
+                        <q-icon name="mdi-account" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>Create Complaint</q-item-label>
+                        <q-item-label>User Data</q-item-label>
                     </q-item-section>
                 </q-item>
 
                 <q-item clickable>
                     <q-item-section avatar>
-                        <q-icon name="mdi-history" />
+                        <q-icon name="mdi-message" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>Complaint History</q-item-label>
+                        <q-item-label>Message</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-item @click="logout()" clickable>
+                    <q-item-section avatar>
+
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Logout</q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -66,6 +97,7 @@
 
 <script>
 import './MainLayout.scss';
+import { signOut } from "firebase/auth";
 
 export default
 {
@@ -95,8 +127,18 @@ export default
     {
         logout()
         {
-            localStorage.removeItem('user_data');
-            this.$router.push({ name: 'login' });
+            this.$q.loading.show({
+                message: "Logging out..."
+            });
+
+            setTimeout(async () =>
+            {
+                await signOut(this.$auth);
+                localStorage.removeItem('user_data');
+                this.$router.push({ name: 'login' });
+
+                this.$q.loading.hide();
+            }, 1000);
         }
     }
 }

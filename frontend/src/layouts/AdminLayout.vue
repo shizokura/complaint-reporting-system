@@ -1,6 +1,6 @@
 <template>
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated>
+    <q-layout class="main-layout" view="lHh Lpr lFf">
+        <q-header unelevated>
             <q-toolbar>
                 <q-btn
                     flat
@@ -10,9 +10,6 @@
                     aria-label="Menu"
                     @click="leftDrawerOpen = !leftDrawerOpen"
                 />
-                <q-toolbar-title>
-                    Complaint Reporting System
-                </q-toolbar-title>
             </q-toolbar>
         </q-header>
 
@@ -20,12 +17,14 @@
             v-model="leftDrawerOpen"
             bordered
         >
-            <q-list>
-                <q-item-label header>
-                    NAVIGATION
-                </q-item-label>
+            <q-item-label header style="text-align: center; font-size: 2rem; font-weight: 700;">
+                e-CRS
+            </q-item-label>
 
-                <q-item @click="goTo('admin_dashboard')" clickable>
+            <q-separator />
+
+            <q-list style="padding: 15px;">
+                <q-item @click="$router.push({ name: 'admin_dashboard' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="home" />
                     </q-item-section>
@@ -34,18 +33,49 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item @click="goTo('admin_users')" clickable>
+                <q-expansion-item
+                    icon="mdi-alert"
+                    label="Complaints"
+                >
+                    <q-item @click="$router.push({ name: 'admin_complaint_pending' })" clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>Pending</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item @click="$router.push({ name: 'admin_complaint_process' })"  clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>In-Process</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item @click="$router.push({ name: 'admin_complaint_closed' })"  clickable style="padding-left: 75px;">
+                        <q-item-section>
+                            <q-item-label>Closed</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                </q-expansion-item>
+
+                <q-item clickable>
                     <q-item-section avatar>
                         <q-icon name="mdi-account" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>Users</q-item-label>
+                        <q-item-label>User Data</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-item clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-message" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Message</q-item-label>
                     </q-item-section>
                 </q-item>
 
                 <q-item @click="logout()" clickable>
                     <q-item-section avatar>
-                        <q-icon name="mdi-logout-variant" />
+
                     </q-item-section>
                     <q-item-section>
                         <q-item-label>Logout</q-item-label>
@@ -62,13 +92,14 @@
 
 <script>
 import './AdminLayout.scss';
+import { signOut } from "firebase/auth";
 
 export default
 {
     name: 'AdminLayout',
     data: () => 
     ({
-        leftDrawerOpen: false
+        leftDrawerOpen: true
     }),
     created()
     {
@@ -93,8 +124,18 @@ export default
         },
         logout()
         {
-            localStorage.removeItem('user_data');
-            this.$router.push({ name: 'login' });
+            this.$q.loading.show({
+                message: "Logging out..."
+            });
+
+            setTimeout(async () =>
+            {
+                await signOut(this.$auth);
+                localStorage.removeItem('user_data');
+                this.$router.push({ name: 'login' });
+
+                this.$q.loading.hide();
+            }, 1000);
         }
     }
 }

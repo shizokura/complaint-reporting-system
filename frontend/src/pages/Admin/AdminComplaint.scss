@@ -1,0 +1,54 @@
+.complaint
+{
+    padding: 50px;
+    &__back
+    {
+        .q-btn
+        {
+            width: 200px;
+        }
+    }
+    &__table
+    {
+        margin-top: 25px;
+        .header
+        {
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+        .body
+        {
+            &__filter
+            {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            &__table
+            {
+                table
+                {
+                    background-color: #fff;
+                    margin-top: 25px;
+                    border: 1px solid #E0E0E0;
+                }
+            }
+        }
+    }
+}
+
+.view-complaint
+{
+    background-color: #fff;
+    padding: 50px;
+    &__back
+    {
+        width: 200px;
+        margin-bottom: 25px;
+    }
+    &__header
+    {
+
+    }
+}

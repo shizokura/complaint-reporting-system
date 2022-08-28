@@ -3,8 +3,8 @@
         <div class="logo__img">
             <q-icon name="mdi-account-alert" />
         </div>
-        <div class="logo__name">e-CRS</div>
-        <div class="logo__sub">Amet, consectur adipiscing elit, sed do euismod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labor nisi.</div>
+        <div class="logo__name">COMPLAINT REPORT SYSTEM</div>
+        <!-- <div class="logo__sub">Amet, consectur adipiscing elit, sed do euismod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labor nisi.</div> -->
     </div>
 </template>
 
@@ -28,10 +28,6 @@
         margin-top: 15px;
         font-size: 2.5rem;
         font-weight: 700;
-    }
-    &__sub
-    {
-        margin-top: 15px;
     }
 }
 </style>

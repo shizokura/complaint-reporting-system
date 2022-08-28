@@ -48,7 +48,7 @@
                     <div class="text">I agree to <a @click="terms_dialog = true" href="javascript:">Terms and Condition</a> of this website.</div>
                 </div>
                 <div class="login__button">
-                    <q-btn unelevated :label="is_loading ? 'LOADING...' : 'SUBMIT'" type="submit" color="primary"/>
+                    <q-btn no-caps unelevated :label="is_loading ? 'LOADING...' : 'Register'" type="submit" color="primary"/>
                 </div>
                 <div class="login__register">
                     <p class="message">Already registered? <a @click="$router.push('/login')" href="javascript:">Login</a></p>
@@ -301,7 +301,8 @@ export default
                     phone_number: this.phone_number,
                     address: this.address,
                     certificate_of_residency: url,
-                    email: this.email
+                    email: this.email,
+                    role: 'Member'
                 });
 
                 this.$q.notify(

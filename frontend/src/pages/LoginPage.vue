@@ -147,7 +147,7 @@ export default
             //     });
             // }
             
-            let result = await signInWithEmailAndPassword(this.$auth, this.email, this.password)
+            await signInWithEmailAndPassword(this.$auth, this.email, this.password)
             .catch((error) => 
             {
                 const errorCode = error.code;
@@ -167,14 +167,9 @@ export default
                         message: message
                     });
                 }
+
+                this.is_loading = false;
             });
-
-            if (result)
-            {
-                console.log(result);
-            }
-
-            this.is_loading = false;
         }
     },
     created()
