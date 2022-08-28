@@ -1,57 +1,30 @@
-import Firebase from 'firebase/app';
-import { firestorePlugin } from 'vuefire';
-import 'firebase/firestore';
-import 'firebase/auth';
-import 'firebase/functions';
-import 'firebase/storage';
-import 'firebase/analytics';
-import config from 'app/settings';
+import { boot } from 'quasar/wrappers'
 
-Firebase.initializeApp(config);
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
-export default ({ Vue }) => {
-  Vue.use(firestorePlugin);
-}
-
-let FUNCTIONS;
-
-if(process.env.NODE_ENV == 'development')
+const firebaseConfig =
 {
-	Firebase.functions().useFunctionsEmulator(`http://${window.location.hostname}:5000`);
-	FUNCTIONS = Firebase.functions();
-}
-else
-{
-	FUNCTIONS  = Firebase.app().functions('asia-northeast1');
-}
+  apiKey: "AIzaSyD7_uVDQTVABnLWGbQei9-6bDU3Vt-Jh20",
+  authDomain: "online-crs.firebaseapp.com",
+  projectId: "online-crs",
+  storageBucket: "online-crs.appspot.com",
+  messagingSenderId: "525223230952",
+  appId: "1:525223230952:web:ad1c036ed5eba95fbcf85d",
+  measurementId: "G-8X49ZLZV6F"
+};
 
-Firebase.firestore().enablePersistence({
-    synchronizeTabs:true
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const storage = getStorage(app);
+
+export default boot(({ app }) => 
+{
+  app.config.globalProperties.$db = db;
+  app.config.globalProperties.$auth = auth;
+  app.config.globalProperties.$storage = storage;
 })
-  .catch(function(err) {
-      console.log(err);
-  });
-
-const DB          = Firebase.firestore();
-const AUTH        = Firebase.auth();
-const FIREBASE_AUTH = Firebase.auth;
-const STORAGE     = Firebase.storage;
-const STORAGEREF  = Firebase.storage().ref();
-const FIELD_VALUE = Firebase.firestore.FieldValue;
-const FIELD_PATH  = Firebase.firestore.FieldPath;
-const TIME_STAMP  = Firebase.firestore.Timestamp;
-const ANALYTICS   = Firebase.analytics();
-
-export
-{
-    ANALYTICS,
-    DB,
-    AUTH,
-    FIREBASE_AUTH,
-    FUNCTIONS,
-    STORAGE,
-    STORAGEREF,
-    FIELD_VALUE,
-    FIELD_PATH,
-    TIME_STAMP
-}

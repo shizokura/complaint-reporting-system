@@ -1,7 +1,8 @@
 <template>
     <div class="login-container">
+        <LogoComponent />
         <div class="login">
-            <div class="login__title">LOGIN</div>
+            <div class="login__title">Log-in your Account</div>
             <q-form
                 @submit="onSubmit"
                 class="q-gutter-md"
@@ -21,7 +22,7 @@
                 />
 
                 <div class="login__button">
-                    <q-btn unelevated :disabled="is_loading" :label="is_loading ? 'LOADING...' : 'SUBMIT'" type="submit" color="primary"/>
+                    <q-btn no-caps unelevated :disabled="is_loading" :label="is_loading ? 'LOADING...' : 'Log-in'" type="submit" color="primary"/>
                 </div>
                 <div class="login__register">
                     <p class="message">Not registered? <a @click="$router.push('/register')" href="javascript:">Create an account</a></p>
@@ -42,21 +43,26 @@
     align-items: center;
     padding: 15px;
     background: #fff;
+    display: grid;
+    grid-template-columns: 500px auto;
+    column-gap: 100px;
 }
 
 .login
 {
-    width: 390px;
+    width: 500px;
     margin: auto;
+    padding: 25px;
     &__title
     {
         display: block;
-        font-size: 39px;
+        font-size: 2rem;
         color: #333333;
         line-height: 1.2;
         text-align: center;
         font-weight: 700;
         margin-bottom: 50px;
+        text-align: left;
     }
     &__button
     {
@@ -85,9 +91,13 @@
 </style>
 
 <script>
+import { signInWithEmailAndPassword } from "firebase/auth";
+import LogoComponent from "src/components/LogoComponent.vue";
+
 export default
 {
     name: 'LoginPage',
+    components: { LogoComponent },
     data: () => 
     ({
         email: null,
@@ -102,39 +112,66 @@ export default
 
             this.is_loading = true;
 
-            let res = await this.$api.post('login', { email: this.email, password: this.password });
+            // let res = await this.$api.post('login', { email: this.email, password: this.password });
 
-            if (res.data)
-            {
-                localStorage.setItem('user_data', JSON.stringify(res.data));
+            // if (res.data)
+            // {
+            //     localStorage.setItem('user_data', JSON.stringify(res.data));
                 
-                if (res.data.role === 'Member')
-                {
-                    if (res.data.is_verified)
-                    {
-                        this.$router.push({ name: 'member_dashboard' });
-                    }
-                    else
-                    {
-                        this.$q.notify(
-                        {
-                            color: 'red',
-                            message: 'Your account has not been verified.'
-                        });
-                    }
-                }
-                else if (res.data.role === 'Admin')
-                {
-                    this.$router.push({ name: 'admin_dashboard' });
-                }
-            }
-            else
+            //     if (res.data.role === 'Member')
+            //     {
+            //         if (res.data.is_verified)
+            //         {
+            //             this.$router.push({ name: 'member_dashboard' });
+            //         }
+            //         else
+            //         {
+            //             this.$q.notify(
+            //             {
+            //                 color: 'red',
+            //                 message: 'Your account has not been verified.'
+            //             });
+            //         }
+            //     }
+            //     else if (res.data.role === 'Admin')
+            //     {
+            //         this.$router.push({ name: 'admin_dashboard' });
+            //     }
+            // }
+            // else
+            // {
+            //     this.$q.notify(
+            //     {
+            //         color: 'red',
+            //         message: 'Invalid credentials'
+            //     });
+            // }
+            
+            let result = await signInWithEmailAndPassword(this.$auth, this.email, this.password)
+            .catch((error) => 
             {
-                this.$q.notify(
+                const errorCode = error.code;
+
+                let message = null;
+                
+                if (errorCode === 'auth/user-not-found')
                 {
-                    color: 'red',
-                    message: 'Invalid credentials'
-                });
+                    message = 'User not found';
+                }
+
+                if (message)
+                {
+                    this.$q.notify(
+                    {
+                        color: 'red',
+                        message: message
+                    });
+                }
+            });
+
+            if (result)
+            {
+                console.log(result);
             }
 
             this.is_loading = false;
