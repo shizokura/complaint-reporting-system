@@ -1,27 +1,22 @@
 .member-dashboard
 {
     padding: 25px;
-    &__title
-    {
-        font-size: 2rem;
-        margin-bottom: 15px;
-        font-weight: 700;
-        color: rgba(0,0,0,0.80);
-    }
     &__body
     {
         .summary
         {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             text-align: center;
             column-gap: 15px;
+            row-gap: 15px;
             &__item
             {
                 background-color: #1976D2;
                 padding: 15px;
                 border-radius: 5px;
                 color: #fff;
+                cursor: pointer;
                 .icon
                 {
                     .q-icon
@@ -39,6 +34,73 @@
         .chart
         {
             margin-top: 25px;
+        }
+    }
+}
+
+.member-container
+{
+    padding: 25px;
+    &__back
+    {
+        margin-bottom: 25px;
+        .q-btn
+        {
+            width: 200px;
+        }
+    }
+    &__header
+    {
+        background-color: #1976D2;
+        color: #fff;
+        padding: 10px 25px;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    &__body
+    {
+        background-color: #F1F1F1;
+        padding: 25px;
+        .form
+        {
+            display: flex;
+            flex-direction: column;
+            row-gap: 15px;
+            .form-group
+            {
+                &__label
+                {
+                    font-weight: 400;
+                    font-size: 1rem;
+                    margin-bottom: 10px;
+                }
+            }
+            .two-columns
+            {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                column-gap: 15px;
+                row-gap: 15px;
+            }
+        }
+        .table
+        {
+            &__filter
+            {
+                margin-bottom: 15px;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .action
+            {
+                .q-btn
+                {
+                    &:first-child
+                    {
+                        margin-right: 15px;
+                    }
+                }
+            }
         }
     }
 }

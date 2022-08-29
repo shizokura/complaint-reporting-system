@@ -32,6 +32,7 @@ export default
             if (user) 
             {
                 const uid = user.uid;
+                localStorage.setItem("user_id", uid);
                 let user_data = await getDoc(doc(this.$db, "users", uid));
 
                 if (user_data.exists())

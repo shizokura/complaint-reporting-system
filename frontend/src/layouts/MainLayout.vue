@@ -2,17 +2,17 @@
     <q-layout class="main-layout" view="lHh Lpr lFf">
         <q-header unelevated>
             <q-toolbar>
-                <!-- <q-btn
+                <q-btn
                     flat
                     dense
                     round
                     icon="menu"
                     aria-label="Menu"
                     @click="leftDrawerOpen = !leftDrawerOpen"
-                /> -->
+                />
                 <q-toolbar-title style="text-align: right; font-size: 14px;">
                     <q-btn icon="mdi-bell" unelevated style="margin-right: 15px;" />
-                    {{ user_data.full_name }}
+                    {{ user_data.first_name }} {{ user_data.last_name }}
                     <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
                 </q-toolbar-title>
             </q-toolbar>
@@ -38,27 +38,14 @@
                     </q-item-section>
                 </q-item>
 
-                <q-expansion-item
-                    icon="mdi-alert"
-                    label="Complaints"
-                >
-                    <q-item @click="$router.push({ name: 'member_complaint_pending' })" clickable style="padding-left: 75px;">
-                        <q-item-section>
-                            <q-item-label>Pending</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                    <q-item clickable style="padding-left: 75px;">
-                        <q-item-section>
-                            <q-item-label>In-Process</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                    <q-item clickable style="padding-left: 75px;">
-                        <q-item-section>
-                            <q-item-label>Closed</q-item-label>
-                        </q-item-section>
-                    </q-item>
-
-                </q-expansion-item>
+                <q-item @click="$router.push({ name: 'member_create_complaint' })" clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-pencil" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Create Complaint</q-item-label>
+                    </q-item-section>
+                </q-item>
 
                 <q-item clickable>
                     <q-item-section avatar>
@@ -90,7 +77,13 @@
         </q-drawer>
 
         <q-page-container>
-            <router-view />
+            <transition
+                appear
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+            >
+                <router-view />
+            </transition>
         </q-page-container>
     </q-layout>
 </template>
