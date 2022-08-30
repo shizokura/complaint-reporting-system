@@ -23,7 +23,7 @@
                         </thead>
                         <tbody v-if="complaints.length">
                             <tr v-for="(complaint, index) in complaints" :key="index">
-                                <td class="text-center">{{ index + 1 }}</td>
+                                <td class="text-center">{{ complaint.id_number }}</td>
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>

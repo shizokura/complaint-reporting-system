@@ -54,7 +54,7 @@ export default
     {
         async getCount()
         {
-            this.all_complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("date"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+            this.all_complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
             this.pending_complaints = this.all_complaints.filter(complaint => complaint.status === 'pending');
             this.in_process_complaints = this.all_complaints.filter(complaint => complaint.status === 'process');
             this.closed_complaints = this.all_complaints.filter(complaint => complaint.status === 'closed');

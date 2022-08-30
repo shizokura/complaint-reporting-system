@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, limit, orderBy } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -115,6 +115,13 @@ export default
 
                 this.form_data.proof = url;
                 this.form_data.status = 'pending';
+                this.form_data.date_created = new Date();
+
+                // get ID
+                let last_data = await getDocs(collection(this.$db, "complaints"), orderBy('date_created', 'ASC'), limit('1')).then(res => res.docs.length ? Object.assign({}, res.docs[0].data(), { id: res.docs[0].id }) : null);
+                console.log(last_data);
+                if (last_data) this.form_data.id_number = last_data.id_number + 1;
+                else this.form_data.id_number = 1;
 
                 await addDoc(collection(this.$db, "complaints"), this.form_data);
 
