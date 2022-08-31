@@ -42,11 +42,11 @@ export default
 
                     if (user_data.role === 'Member')
                     {
-                        this.$router.push({ name: 'member_dashboard' });
+                        await this.$router.push({ name: 'member_dashboard' });
                     }
                     else if (user_data.role === 'Admin')
                     {
-                        this.$router.push({ name: 'admin_dashboard' });
+                        await this.$router.push({ name: 'admin_dashboard' });
                     }
                 }
             }
