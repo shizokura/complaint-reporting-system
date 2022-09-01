@@ -119,9 +119,12 @@ export default
 
                 // get ID
                 let last_data = await getDocs(collection(this.$db, "complaints"), orderBy('date_created', 'ASC'), limit('1')).then(res => res.docs.length ? Object.assign({}, res.docs[0].data(), { id: res.docs[0].id }) : null);
-                console.log(last_data);
                 if (last_data) this.form_data.id_number = last_data.id_number + 1;
                 else this.form_data.id_number = 1;
+
+                // user id
+                let user_data = JSON.parse(localStorage.getItem('user_data'));
+                this.form_data.user_id = user_data.id;
 
                 await addDoc(collection(this.$db, "complaints"), this.form_data);
 

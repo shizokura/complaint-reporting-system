@@ -19,7 +19,6 @@
                                 <th class="text-center">Complaint Type</th>
                                 <th class="text-center">Creation date</th>
                                 <th class="text-center">Status</th>
-                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody v-if="complaints.length">
@@ -28,10 +27,6 @@
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>
-                                <td class="text-center action">
-                                    <q-btn @click="view(complaint)" color="primary" label="View" unelevated />
-                                    <q-btn @click="remove(complaint)" color="red" label="Delete" unelevated />
-                                </td>
                             </tr>
                         </tbody>
                         <tbody v-else>
@@ -47,6 +42,8 @@
 </template>
 
 <script>
+import { query, orderBy, collection, getDocs } from "firebase/firestore"; 
+
 export default
 {
     name: 'MemberComplaint',
@@ -66,9 +63,13 @@ export default
     {
 
     },
-    mounted()
+    async mounted()
     {
-
+        this.$q.loading.show({
+            message: "Loading data..."
+        });
+        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        this.$q.loading.hide();
     }
 }
 </script>

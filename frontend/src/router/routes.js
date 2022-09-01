@@ -18,6 +18,8 @@ const routes =
             { name: 'member_complaint_process', path: '/complaint/process', component: () => import('pages/Member/MemberComplaintProcess.vue') },
             { name: 'member_complaint_closed', path: '/complaint/closed', component: () => import('pages/Member/MemberComplaintClosed.vue') },
             { name: 'member_complaint_history', path: '/complaint/history', component: () => import('pages/Member/MemberComplaintHistory.vue') },
+            { name: 'member_message', path: '/message', component: () => import('pages/Member/MemberMessage.vue') },
+            { name: 'member_user_maintenance', path: '/user_maintenance', component: () => import('pages/Member/MemberUserMaintenance.vue') }
         ]
     },
 

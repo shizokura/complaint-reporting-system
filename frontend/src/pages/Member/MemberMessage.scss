@@ -1,0 +1,48 @@
+.member-message
+{
+    padding: 25px;
+    &__button
+    {
+        margin-bottom: 25px;
+        .q-btn
+        {
+            
+        }
+    }
+    &__tab
+    {
+        .q-tab-panel
+        {
+            display: flex;
+            flex-direction: column;
+            row-gap: 15px;
+        }
+        .item
+        {
+            background-color: #fff;
+            padding: 15px 25px;
+            &__title
+            {
+                font-size: 1.25rem;
+                font-weight: 700;
+            }
+            &__text
+            {
+                font-size: 1rem;
+                font-weight: 300;
+            }
+        }
+    }
+}
+
+.create-message
+{
+    width: 750px;
+    &__form
+    {
+        .q-btn
+        {
+            margin-top: 15px;
+        }
+    }
+}

@@ -56,7 +56,7 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'member_message' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="mdi-message" />
                     </q-item-section>
@@ -65,7 +65,7 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'member_user_maintenance' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="mdi-cog" />
                     </q-item-section>

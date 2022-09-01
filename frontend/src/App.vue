@@ -37,7 +37,7 @@ export default
 
                 if (user_data.exists())
                 {
-                    user_data = user_data.data();
+                    user_data = Object.assign({}, user_data.data(), { id: user_data.id });
                     localStorage.setItem('user_data', JSON.stringify(user_data));
 
                     if (user_data.role === 'Member')
