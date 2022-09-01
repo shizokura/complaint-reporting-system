@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { query, orderBy, collection, getDocs } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
 
 export default
 {
