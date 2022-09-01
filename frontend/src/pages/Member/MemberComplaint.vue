@@ -93,22 +93,25 @@ export default
         },
         async remove(data)
         {
-            this.$q.loading.show(
+            if (confirm('Are you sure want to delete this complaint?'))
             {
-                message: 'Deleting data...'
-            });
+                this.$q.loading.show(
+                {
+                    message: 'Deleting data...'
+                });
 
-            await deleteDoc(doc(this.$db, "complaints", data.id));
+                await deleteDoc(doc(this.$db, "complaints", data.id));
 
-            this.complaints = this.complaints.filter(complaint => complaint.id !== data.id);
+                this.complaints = this.complaints.filter(complaint => complaint.id !== data.id);
 
-            this.$q.notify(
-            {
-                color: 'green',
-                message: 'Successfully deleted data'
-            });
+                this.$q.notify(
+                {
+                    color: 'green',
+                    message: 'Successfully deleted data'
+                });
 
-            this.$q.loading.hide();
+                this.$q.loading.hide();
+            }
         }
     },
     mounted()
