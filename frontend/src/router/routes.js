@@ -17,6 +17,7 @@ const routes =
             { name: 'member_complaint_pending', path: '/complaint/pending', component: () => import('pages/Member/MemberComplaintPending.vue') },
             { name: 'member_complaint_process', path: '/complaint/process', component: () => import('pages/Member/MemberComplaintProcess.vue') },
             { name: 'member_complaint_closed', path: '/complaint/closed', component: () => import('pages/Member/MemberComplaintClosed.vue') },
+            { name: 'member_complaint_history', path: '/complaint/history', component: () => import('pages/Member/MemberComplaintHistory.vue') },
         ]
     },
 

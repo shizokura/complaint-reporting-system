@@ -102,5 +102,16 @@
                 }
             }
         }
+        .clipboard
+        {
+            background-color: #fff;
+            text-align: center;
+            padding: 25px;
+            margin-bottom: 15px;
+            .q-btn
+            {
+                margin: 0 15px;
+            }
+        }
     }
 }

@@ -47,12 +47,12 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'member_complaint_history' })" clickable>
                     <q-item-section avatar>
-                        <q-icon name="mdi-account" />
+                        <q-icon name="mdi-history" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>User Data</q-item-label>
+                        <q-item-label>Complaint History</q-item-label>
                     </q-item-section>
                 </q-item>
 
@@ -62,6 +62,15 @@
                     </q-item-section>
                     <q-item-section>
                         <q-item-label>Message</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-item clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-cog" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>User Maintenance</q-item-label>
                     </q-item-section>
                 </q-item>
 
