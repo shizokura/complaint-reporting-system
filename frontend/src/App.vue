@@ -1,17 +1,19 @@
 <template>
-  <transition
-    appear
-    enter-active-class="animated fadeIn"
-    leave-active-class="animated fadeOut"
-  >
-    <router-view v-if="!is_loading" />
+    <router-view v-if="!is_loading" v-slot="{ Component }">
+        <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+        >
+            <component :is="Component" />
+        </transition>
+    </router-view>
     <q-inner-loading
         v-else
         :showing="true"
         label="Please wait..."
         label-style="font-size: 1.1em"
     />
-  </transition>
 </template>
 
 <script>
