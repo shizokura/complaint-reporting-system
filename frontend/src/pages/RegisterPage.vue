@@ -310,8 +310,6 @@ export default
                     color: 'green',
                     message: 'You have successfully registered.'
                 });
-
-                this.$router.push({ name: 'login' });
             }
             catch (error)
             {

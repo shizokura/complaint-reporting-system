@@ -68,7 +68,8 @@ export default
         this.$q.loading.show({
             message: "Loading data..."
         });
-        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        let user_data = JSON.parse(localStorage.getItem('user_data'));
+        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
         this.$q.loading.hide();
     }
 }
