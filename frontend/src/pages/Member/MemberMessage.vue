@@ -31,7 +31,7 @@
                 <q-tab-panel name="outbox">
                     <template v-if="outbox.length">
                         <div class="item" v-for="(message, index) in outbox" :key="index">
-                            <div class="item__title">{{ message.from.name }}</div>
+                            <div class="item__title">{{ message.to.name }}</div>
                             <div class="item__text">{{ message.message }}</div>
                         </div>
                     </template>

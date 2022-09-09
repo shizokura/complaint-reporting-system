@@ -55,7 +55,7 @@
 
                 </q-expansion-item>
 
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'admin_users' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="mdi-account" />
                     </q-item-section>
@@ -64,7 +64,7 @@
                     </q-item-section>
                 </q-item>
 
-                <q-item clickable>
+                <q-item @click="$router.push({ name: 'admin_message' })" clickable>
                     <q-item-section avatar>
                         <q-icon name="mdi-message" />
                     </q-item-section>

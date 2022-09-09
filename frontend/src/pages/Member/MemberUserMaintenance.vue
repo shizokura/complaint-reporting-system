@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <div class="form-group__label">Date of Birth</div>
                         <div class="form-group__input">
-                            <q-input v-model="form_data.birthdate" dense bg-color="white" type="text" filled />
+                            <q-input v-model="form_data.birthdate" dense bg-color="white" type="date" filled />
                         </div>
                     </div>
                     <div class="form-group">
@@ -136,7 +136,7 @@ export default
 
                 this.$q.notify({
                     color: 'green',
-                    message: 'Successfully added.'
+                    message: 'Successfully updated.'
                 });
 
                 this.$router.go(-1);

@@ -2,10 +2,10 @@
     <div class="member-container">
         <div class="member-container__header">Complaint History</div>
         <div class="member-container__body">
-            <div class="clipboard">
+            <!-- <div class="clipboard">
                 <q-btn label="Copy" no-caps unelevated color="primary" />
                 <q-btn label="Paste" no-caps unelevated color="primary" />
-            </div>
+            </div> -->
             <div class="table">
                 <div class="table__filter">
                     <div></div>

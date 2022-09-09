@@ -1,37 +1,45 @@
 <template>
-    <div class="crud">
-        <div class="crud__header">
-            <div class="title">Users</div>
+    <div class="admin-container">
+        <div class="admin-container__back">
+            <q-btn @click="$router.go(-1)" color="primary" unelevated label="Back" no-caps />
         </div>
-        <div class="crud__body">
-            <q-markup-table seperator="vertical" flat bordered>
-                <thead>
-                    <tr>
-                        <th class="text-left">Email</th>
-                        <th class="text-left">Full Name</th>
-                        <th class="text-left">Is Verified</th>
-                        <th class="text-center" style="width: 150px;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(current, index) in data" :key="index">
-                        <td class="text-left">{{ current.email }}</td>
-                        <td class="text-left">{{ current.full_name }}</td>
-                        <td class="text-left">{{ current.is_verified ? 'Yes' : 'No' }}</td>
-                        <td class="text-center">
-                            <q-btn-dropdown color="primary" label="Actions">
-                                <q-list>
-                                    <q-item clickable v-close-popup @click="verify(current)">
-                                        <q-item-section>
-                                            <q-item-label>Verify</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-btn-dropdown>
-                        </td>
-                    </tr>
-                </tbody>
-            </q-markup-table>
+        <div class="admin-container__header">User Data</div>
+        <div class="admin-container__body">
+            <div class="table">
+                <div class="table__filter">
+                    <div></div>
+                    <q-input type="text" bg-color="white" filled placeholder="Search..." />
+                </div>
+                <div class="table__table">
+                    <q-markup-table separator="cell" flat>
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">First Name</th>
+                                <th class="text-center">Last Name</th>
+                                <th class="text-center">Birthday</th>
+                                <th class="text-center">Gender</th>
+                                <th class="text-center">Phone no.</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td class="text-center">Joan</td>
+                                <td class="text-center">Dela Cruz</td>
+                                <td class="text-center">April 16, 1991</td>
+                                <td class="text-center">Gender</td>
+                                <td class="text-center">09971276494</td>
+                                <td class="text-center">
+                                    <q-btn style="margin-right: 15px;" color="primary" label="Update" unelevated />
+                                    <q-btn color="red" label="Delete" unelevated />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </q-markup-table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
