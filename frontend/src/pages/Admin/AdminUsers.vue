@@ -8,7 +8,7 @@
             <div class="table">
                 <div class="table__filter">
                     <div></div>
-                    <q-input type="text" bg-color="white" filled placeholder="Search..." />
+                    <q-input v-model="search" type="text" bg-color="white" filled placeholder="Search..." />
                 </div>
                 <div class="table__table">
                     <q-markup-table separator="cell" flat>
@@ -24,13 +24,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td class="text-center">Joan</td>
-                                <td class="text-center">Dela Cruz</td>
-                                <td class="text-center">April 16, 1991</td>
-                                <td class="text-center">Gender</td>
-                                <td class="text-center">09971276494</td>
+                            <tr v-for="(user, index) in users_filtered" :key="index">
+                                <td class="text-center">{{ index + 1 }}</td>
+                                <td class="text-center">{{ user.first_name }}</td>
+                                <td class="text-center">{{ user.last_name }}</td>
+                                <td class="text-center">{{ dateFormat(user.birthdate) }}</td>
+                                <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
+                                <td class="text-center">{{ user.phone_number }}</td>
                                 <td class="text-center">
                                     <q-btn style="margin-right: 15px;" color="primary" label="Update" unelevated />
                                     <q-btn color="red" label="Delete" unelevated />
@@ -45,13 +45,23 @@
 </template>
 
 <script>
+import { collection, getDocs, query } from "firebase/firestore"; 
+
 export default
 {
     name: 'AdminUsers',
     data: () => 
     ({
-        data: null
+        users: [],
+        search: ''
     }),
+    computed:
+    {
+        users_filtered()
+        {
+            return this.users.filter(user => `${ user.first_name } ${ user.last_name }`.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
+        }
+    },
     methods:
     {
         async verify(data)
@@ -96,11 +106,18 @@ export default
             {
                 this.$q.loading.hide();
             }
+        },
+        dateFormat(date)
+        {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const d = new Date(date);
+            console.log(`${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`);
+            return `${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`;
         }
     },
     async created()
     {
-        this.data = await this.$api.post('admin/list-users').then(res => res.data);
+        this.users = await getDocs(query(collection(this.$db, "users"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
     }
 }
 </script>

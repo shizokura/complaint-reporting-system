@@ -8,7 +8,7 @@
             <div class="table">
                 <div class="table__filter">
                     <div></div>
-                    <q-input type="text" bg-color="white" filled placeholder="Search..." />
+                    <q-input v-model="search" type="text" bg-color="white" filled placeholder="Search..." />
                 </div>
                 <div class="table__table">
                     <q-markup-table separator="cell" flat>
@@ -23,13 +23,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td class="text-center">Juan Dela Cruz</td>
-                                <td class="text-center">Environment</td>
-                                <td class="text-center">April 18, 2022</td>
-                                <td class="text-center">Pending</td>
-                                <td class="text-center"><q-btn @click="detail_dialog = true" color="primary" label="View" unelevated /></td>
+                            <tr v-for="(complaint, index) in complaints_filtered" :key="index">
+                                <td class="text-center">{{ complaint.id_number }}</td>
+                                <td class="text-center">{{ complaint.name }}</td>
+                                <td class="text-center">{{ complaint.type }}</td>
+                                <td class="text-center">{{ dateFormat(new Date(complaint.date_created.seconds * 1000)) }}</td>
+                                <td class="text-center" style="text-transform: capitalize;">{{ complaint.type }}</td>
+                                <td class="text-center"><q-btn @click="viewComplaint(complaint)" color="primary" label="View" unelevated /></td>
                             </tr>
                         </tbody>
                     </q-markup-table>
@@ -45,12 +45,36 @@
                     <div class="admin-container__body">
                         <div class="view-complaint">
                             <div class="item">
-                                <div class="item__label">Complaints No. #:</div>
-                                <div class="item__value">220323-1</div>
+                                <div class="item__label">Complaint No. #:</div>
+                                <div class="item__value">{{ selected_data.id_number }}</div>
                             </div>
                             <div class="item">
-                                <div class="item__label">Complaints Type:</div>
-                                <div class="item__value">Pending</div>
+                                <div class="item__label">Complaint Type:</div>
+                                <div class="item__value">{{ selected_data.type }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Date:</div>
+                                <div class="item__value">{{ selected_data.date }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Details:</div>
+                                <div class="item__value">{{ selected_data.type }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complainant Name:</div>
+                                <div class="item__value">{{ selected_data.name }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Proof:</div>
+                                <div class="item__value"><a href="{{ selected_data.proof }}" target="_blank">{{ selected_data.proof }}</a></div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Relief:</div>
+                                <div class="item__value">{{ selected_data.relief }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Status:</div>
+                                <div class="item__value">{{ selected_data.status }}</div>
                             </div>
                         </div>
                     </div>
@@ -63,12 +87,17 @@
 <script>
 import './AdminComplaint.scss';
 
+import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
+
 export default
 {
     name: 'AdminComplaint',
     data: () =>
     ({
-        detail_dialog: false
+        detail_dialog: false,
+        selected_data: null,
+        complaints: [],
+        search: ''
     }),
     props:
     {
@@ -94,11 +123,32 @@ export default
             {
                 return '';
             }
+        },
+        complaints_filtered()
+        {
+            return this.complaints.filter(complaint => complaint.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
         }
     },
-    mounted()
+    methods:
     {
+        viewComplaint(data)
+        {
+            this.selected_data = data;
+            this.detail_dialog = true;
 
+            console.log(this.selected_data);
+        },
+        dateFormat(date)
+        {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const d = new Date(date);
+            console.log(`${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`);
+            return `${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`;
+        }
+    },
+    async mounted()
+    {
+        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("status", "==", this.status))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
     }
 }
 </script>

@@ -5,23 +5,23 @@
             <div class="summary">
                 <div class="summary__item">
                     <div class="icon"><q-icon name="mdi-account" /></div>
-                    <div class="name">(0) Registered Users</div>
+                    <div class="name">({{ registered_users_count }}) Registered Users</div>
                 </div>
                 <div class="summary__item">
                     <div class="icon"><q-icon name="mdi-alert" /></div>
-                    <div class="name">(0) Complaint/s</div>
+                    <div class="name">({{ complaints_count }}) Complaint/s</div>
                 </div>
                 <div class="summary__item">
                     <div class="icon"><q-icon name="mdi-help-rhombus" /></div>
-                    <div class="name">(0) Pending Complaint/s</div>
+                    <div class="name">({{ pending_complaints_count }}) Pending Complaint/s</div>
                 </div>
                 <div class="summary__item">
                     <div class="icon"><q-icon name="mdi-progress-clock" /></div>
-                    <div class="name">(0) In Process Complaint/s</div>
+                    <div class="name">({{ in_process_complaints_count }}) In Process Complaint/s</div>
                 </div>
                 <div class="summary__item">
                     <div class="icon"><q-icon name="mdi-close-circle-outline" /></div>
-                    <div class="name">(0) Closed Complaint/s</div>
+                    <div class="name">({{ closed_complaints_count }}) Closed Complaint/s</div>
                 </div>
             </div>
             <div class="chart">
@@ -80,13 +80,42 @@
 
 <script>
 import Chart from 'chart.js/auto';
+import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
 
 export default
 {
     name: 'AdminDashboard',
-    mounted()
+    data: () => 
+    ({
+        registered_users_count: 0,
+        complaints_count: 0,
+        pending_complaints_count: 0,
+        in_process_complaints_count: 0,
+        closed_complaints_count: 0
+    }),
+    async mounted()
     {
         const ctx = document.getElementById('chart_canvas');
+
+        // GET TOTAL USERS
+        let users = await getDocs(query(collection(this.$db, "users"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        this.registered_users_count = users.length;
+
+        // GET ALL COMPLAINTS
+        let complaints = await getDocs(query(collection(this.$db, "complaints"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+
+        // FILTER DATA BASED ON STATUS
+        this.complaints_count = complaints.length;
+        this.pending_complaints_count = complaints.filter(complaint => complaint.status === 'pending').length;
+        this.in_process_complaints_count = complaints.filter(complaint => complaint.status === 'process').length;
+        this.closed_complaints_count = complaints.filter(complaint => complaint.status === 'closed').length;
+
+        let complaints_by_month = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+        for (let complaint of complaints)
+        {
+            complaints_by_month[new Date(complaint.date).getMonth()]++;
+        }
 
         const myChart = new Chart(ctx, 
         {
@@ -95,7 +124,7 @@ export default
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
                     label: '# of Complaints',
-                    data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
+                    data: complaints_by_month,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
