@@ -28,8 +28,8 @@
                                 <td class="text-center">{{ complaint.name }}</td>
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ dateFormat(new Date(complaint.date_created.seconds * 1000)) }}</td>
-                                <td class="text-center" style="text-transform: capitalize;">{{ complaint.type }}</td>
-                                <td class="text-center"><q-btn @click="viewComplaint(complaint)" color="primary" label="View" unelevated /></td>
+                                <td class="text-center" style="text-transform: capitalize;">{{ getStatus(complaint.status) }}</td>
+                                <td class="text-center"><q-btn @click="viewComplaint(index, complaint)" color="primary" label="View" unelevated /></td>
                             </tr>
                         </tbody>
                     </q-markup-table>
@@ -41,6 +41,7 @@
             <div style="background-color: #fff;">
                 <div class="admin-container">
                     <q-btn @click="detail_dialog = false" class="admin-container__back" color="primary" unelevated label="Back" no-caps />
+                    <q-btn v-if="selected_data.status !== 'closed'" @click="closeComplaint()" style="margin-left: 15px;" class="admin-container__back" color="primary" unelevated label="Close this complaint" no-caps />
                     <div class="admin-container__header">Complaints Details</div>
                     <div class="admin-container__body">
                         <div class="view-complaint">
@@ -66,7 +67,7 @@
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Proof:</div>
-                                <div class="item__value"><a href="{{ selected_data.proof }}" target="_blank">{{ selected_data.proof }}</a></div>
+                                <div class="item__value"><a :href="selected_data.proof" target="_blank">{{ selected_data.proof }}</a></div>
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Relief:</div>
@@ -74,7 +75,7 @@
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Status:</div>
-                                <div class="item__value">{{ selected_data.status }}</div>
+                                <div class="item__value">{{ getStatus(selected_data.status) }}</div>
                             </div>
                         </div>
                     </div>
@@ -87,7 +88,7 @@
 <script>
 import './AdminComplaint.scss';
 
-import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, setDoc, doc } from "firebase/firestore"; 
 
 export default
 {
@@ -96,6 +97,7 @@ export default
     ({
         detail_dialog: false,
         selected_data: null,
+        selected_index: null,
         complaints: [],
         search: ''
     }),
@@ -131,12 +133,66 @@ export default
     },
     methods:
     {
-        viewComplaint(data)
+        getStatus(status)
         {
+            if (status === 'pending')
+            {
+                return 'Pending';
+            }
+            else if (status === 'process')
+            {
+                return 'In-Process';
+            }
+            else if (status === 'closed')
+            {
+                return 'Closed';
+            }
+            else
+            {
+                return '';
+            }
+        },
+        async closeComplaint()
+        {
+            try
+            {
+                this.$q.loading.show(
+                {
+                    message: 'Closing this complaint...'
+                });
+
+                await setDoc(doc(this.$db, "complaints", this.selected_data.id), { status: 'closed' }, { merge: true });
+                this.complaints = this.complaints.filter((complaint, index2) => index2 !== this.selected_index);
+                this.detail_dialog = false;
+            }
+            catch (e)
+            {
+                this.$q.notify(
+                {
+                    color: 'red',
+                    message: e.message
+                });
+            }
+            finally
+            {
+                this.$q.loading.hide();
+            }
+        },
+        async viewComplaint(index, data)
+        {
+            this.$q.loading.show();
+
+            if (data.status === 'pending')
+            {
+                await setDoc(doc(this.$db, "complaints", data.id), { status: 'process' }, { merge: true });
+                this.complaints = this.complaints.filter((complaint, index2) => index2 !== index);
+            }
+
             this.selected_data = data;
+            this.selected_index = index;
             this.detail_dialog = true;
 
-            console.log(this.selected_data);
+            this.$q.loading.hide();
         },
         dateFormat(date)
         {
