@@ -5,6 +5,8 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
+import notification from 'src/mixins/notification';
+
 const firebaseConfig =
 {
   apiKey: "AIzaSyD7_uVDQTVABnLWGbQei9-6bDU3Vt-Jh20",
@@ -27,4 +29,6 @@ export default boot(({ app }) =>
   app.config.globalProperties.$db = db;
   app.config.globalProperties.$auth = auth;
   app.config.globalProperties.$storage = storage;
+
+  app.mixin(notification);
 })

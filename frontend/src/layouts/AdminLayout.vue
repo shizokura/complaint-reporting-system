@@ -1,6 +1,6 @@
 <template>
     <q-layout class="main-layout" view="lHh Lpr lFf">
-        <q-header unelevated>
+        <q-header v-if="user_data" unelevated>
             <q-toolbar>
                 <q-btn
                     flat
@@ -10,6 +10,15 @@
                     aria-label="Menu"
                     @click="leftDrawerOpen = !leftDrawerOpen"
                 />
+                <q-toolbar-title style="text-align: right; font-size: 14px;">
+                    <q-btn icon="mdi-bell" unelevated style="margin-right: 15px;">
+                        <q-menu>
+                            <NotificationComponent />
+                        </q-menu>
+                    </q-btn>
+                    {{ user_data.first_name }} {{ user_data.last_name }}
+                    <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
+                </q-toolbar-title>
             </q-toolbar>
         </q-header>
 
@@ -93,15 +102,19 @@
 <script>
 import './AdminLayout.scss';
 import { signOut } from "firebase/auth";
+import { getDoc, doc } from "firebase/firestore";
+import NotificationComponent from '../components/NotificationComponent.vue';
 
 export default
 {
     name: 'AdminLayout',
     data: () => 
     ({
-        leftDrawerOpen: true
+        leftDrawerOpen: true,
+        user_data: null
     }),
-    created()
+    components: { NotificationComponent },
+    async created()
     {
         if (!localStorage.getItem('user_data'))
         {
@@ -114,6 +127,9 @@ export default
         {
             this.$router.push({ name: 'admin_dashboard' });
         }
+
+        this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
+        console.log(this.user_data);
     },
     methods:
     {

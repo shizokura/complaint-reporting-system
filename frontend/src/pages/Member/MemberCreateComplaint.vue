@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { collection, addDoc, getDocs, limit, orderBy } from "firebase/firestore";
+import { collection, addDoc, getDocs, limit, orderBy, where, query } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -127,6 +127,19 @@ export default
                 this.form_data.user_id = user_data.id;
 
                 await addDoc(collection(this.$db, "complaints"), this.form_data);
+
+                // get all admin and notify
+                let admins = await getDocs(query(collection(this.$db, "users"), where("role", "==", "Admin"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+                
+                await Promise.all(admins.map(async admin => 
+                {
+                    await this.$_createNotification(
+                    { 
+                        title: 'New Complaint',
+                        message: `${ user_data.first_name } ${ user_data.last_name } submitted a complaint.`,
+                        user_id: admin.id
+                    });
+                }));
 
                 this.$q.notify({
                     color: 'green',

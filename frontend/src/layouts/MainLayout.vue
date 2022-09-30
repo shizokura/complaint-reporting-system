@@ -11,7 +11,31 @@
                     @click="leftDrawerOpen = !leftDrawerOpen"
                 />
                 <q-toolbar-title style="text-align: right; font-size: 14px;">
-                    <q-btn icon="mdi-bell" unelevated style="margin-right: 15px;" />
+                    <q-btn icon="mdi-bell" unelevated style="margin-right: 15px;">
+                        <q-menu>
+                            <div class="notification q-pa-md">
+                                <div class="notification__header">Notifications</div>
+                                <div class="items">
+                                    <div class="item">
+                                        <div class="item__label">Admin</div>
+                                        <div class="item__message">Your complaint is on pending.</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="item__label">Admin</div>
+                                        <div class="item__message">Your complaint is on pending.</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="item__label">Admin</div>
+                                        <div class="item__message">Your complaint is on pending.</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="item__label">Admin</div>
+                                        <div class="item__message">Your complaint is on pending.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </q-menu>
+                    </q-btn>
                     {{ user_data.first_name }} {{ user_data.last_name }}
                     <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
                 </q-toolbar-title>

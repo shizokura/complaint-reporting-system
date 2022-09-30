@@ -90,3 +90,40 @@
         }
     }
 }
+
+.notification
+{
+    width: 400px;
+    &__header
+    {
+        background-color: #2076D2;
+        color: #fff;
+        margin-top: -16px;
+        margin-left: -16px;
+        margin-right: -16px;
+        font-weight: 500;
+        font-size: 18px;
+        padding: 5px 15px;
+    }
+    .items
+    {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
+        padding-top: 15px;
+    }
+    .item
+    {
+        
+        &__label
+        {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        &__message
+        {
+            font-size: 14px;
+            font-weight: 300;
+        }
+    }
+}
