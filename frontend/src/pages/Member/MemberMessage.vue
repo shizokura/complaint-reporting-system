@@ -154,6 +154,13 @@ export default
                     date_created: new Date()
                 });
 
+                await this.$_createNotification(
+                { 
+                    title: `New Message`, 
+                    message: `${ user_data.first_name } ${ user_data.last_name } has sent you a new message.`, 
+                    user_id: this.to.id
+                });
+
                 this.$q.notify(
                 {
                     color: 'green',

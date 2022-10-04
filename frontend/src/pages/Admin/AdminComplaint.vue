@@ -162,6 +162,14 @@ export default
                 });
 
                 await setDoc(doc(this.$db, "complaints", this.selected_data.id), { status: 'closed' }, { merge: true });
+
+                await this.$_createNotification(
+                { 
+                    title: `Complaint Status Changed`, 
+                    message: `Complaint #${ this.selected_data.id_number } has been closed.`, 
+                    user_id: this.selected_data.user_id
+                });
+
                 this.complaints = this.complaints.filter((complaint, index2) => index2 !== this.selected_index);
                 this.detail_dialog = false;
             }
@@ -185,6 +193,14 @@ export default
             if (data.status === 'pending')
             {
                 await setDoc(doc(this.$db, "complaints", data.id), { status: 'process' }, { merge: true });
+
+                await this.$_createNotification(
+                { 
+                    title: `Complaint Status Changed`, 
+                    message: `Complaint #${ data.id_number } is on process.`, 
+                    user_id: data.user_id
+                });
+
                 this.complaints = this.complaints.filter((complaint, index2) => index2 !== index);
             }
 
