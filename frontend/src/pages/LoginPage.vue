@@ -51,7 +51,7 @@
     justify-content: center;
     align-items: center;
     padding: 15px;
-    background-image: url('bg.svg');
+    background-image: url('/bg.svg');
 }
 
 .login-main

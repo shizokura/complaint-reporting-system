@@ -138,7 +138,7 @@ If you provide us or our service providers with Personal Information of other pe
     display: grid;
     // grid-template-columns: 500px auto;
     column-gap: 100px;
-    background-image: url('bg.svg');
+    background-image: url('/bg.svg');
 }
 
 .login
