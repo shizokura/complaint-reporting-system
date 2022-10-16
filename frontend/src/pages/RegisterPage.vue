@@ -1,44 +1,45 @@
 <template>
     <div class="login-container">
-        <LogoComponent />
+        <!-- <LogoComponent /> -->
         <div class="login">
             <div class="login__title">Sign up to have an account</div>
+            <div class="login__subtitle" style="margin-bottom: 50px;">Already registered? <a @click="$router.push('/login')" href="javascript:">Login</a></div>
             <q-form
                 @submit="onSubmit"
                 class="q-gutter-md"
             >
                 <div class="two-columns">
                     <q-input
-                        filled
+                        outlined
                         v-model="first_name"
                         label="First Name"
                     />
                     <q-input
-                        filled
+                        outlined
                         v-model="last_name"
                         label="Last Name"
                     />
                 </div>
                 <div class="two-columns">
-                    <q-input v-model="birthdate" type="date" filled hint="Date of Birth" />
-                    <q-input v-model="phone_number" type="number" filled label="Phone no." />
+                    <q-input v-model="birthdate" type="date" outlined hint="Date of Birth" />
+                    <q-input v-model="phone_number" type="number" outlined label="Phone no." />
                 </div>
-                <q-input v-model="address" type="text" filled label="Complete Address" />
-                <q-file v-model="certificate_of_residency" filled label="Upload Your Certificate of Residency" />
+                <q-input v-model="address" type="text" outlined label="Complete Address" />
+                <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency" />
                 <q-input
-                    filled
+                    outlined
                     type="email"
                     v-model="email"
                     label="Email"
                 />
                 <q-input
-                    filled
+                    outlined
                     v-model="password"
                     label="Password"
                     type="password"
                 />
                 <q-input
-                    filled
+                    outlined
                     v-model="confirm_password"
                     label="Confirm Password"
                     type="password"
@@ -48,11 +49,11 @@
                     <div class="text">I agree to <a @click="terms_dialog = true" href="javascript:">Terms and Condition</a> of this website.</div>
                 </div>
                 <div class="login__button">
-                    <q-btn no-caps unelevated :label="is_loading ? 'LOADING...' : 'Register'" type="submit" color="primary"/>
+                    <q-btn no-caps unelevated :label="is_loading ? 'LOADING...' : 'REGISTER'" type="submit" color="primary"/>
                 </div>
-                <div class="login__register">
+                <!-- <div class="login__register">
                     <p class="message">Already registered? <a @click="$router.push('/login')" href="javascript:">Login</a></p>
-                </div>
+                </div> -->
             </q-form>
         </div>
 
@@ -135,14 +136,17 @@ If you provide us or our service providers with Personal Information of other pe
     padding: 15px;
     background: #fff;
     display: grid;
-    grid-template-columns: 500px auto;
+    // grid-template-columns: 500px auto;
     column-gap: 100px;
+    background-image: url('bg.svg');
 }
 
 .login
 {
-    width: 500px;
+    width: 700px;
     margin: auto;
+    background-color: #fff;
+    padding: 50px;
     .two-columns
     {
         display: grid;
@@ -157,8 +161,20 @@ If you provide us or our service providers with Personal Information of other pe
         line-height: 1.2;
         text-align: center;
         font-weight: 700;
-        margin-bottom: 50px;
         text-align: left;
+        font-family: 'Montserrat', sans-serif;
+    }
+    &__subtitle
+    {
+        color: rgba(0,0,0,0.3);
+        font-size: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        margin-bottom: 25px;
+        a
+        {
+            color: #883DFF;
+        }
     }
     &__button
     {
@@ -166,11 +182,22 @@ If you provide us or our service providers with Personal Information of other pe
         {
             width: 100%;
             height: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
         }
     }
     &__terms
     {
         text-align: center;
+        color: rgba(0,0,0,0.5);
+        font-size: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        margin-bottom: 25px;
+        a
+        {
+            color: #883DFF;
+        }
         .q-checkbox
         {
             display: inline-block;
@@ -182,7 +209,7 @@ If you provide us or our service providers with Personal Information of other pe
             vertical-align: middle;
             a
             {
-                color: #1976D2;
+                color: #883DFF;
                 cursor: pointer;
             }
         }
@@ -197,7 +224,7 @@ If you provide us or our service providers with Personal Information of other pe
             font-size: 12px;
             a
             {
-                color: #1976D2;
+                color: #883DFF;
                 text-decoration: none;
             }
         }
@@ -209,13 +236,13 @@ If you provide us or our service providers with Personal Information of other pe
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, where, query } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import LogoComponent from "src/components/LogoComponent.vue";
+// import LogoComponent from "src/components/LogoComponent.vue";
 import { v4 as uuidv4 } from 'uuid';
 
 export default
 {
     name: 'RegisterPage',
-    components: { LogoComponent },
+    // components: { LogoComponent },
     data: () => 
     ({
         // Form Data
@@ -324,6 +351,8 @@ export default
                     color: 'green',
                     message: 'You have successfully registered.'
                 });
+
+                window.location.reload();
             }
             catch (error)
             {

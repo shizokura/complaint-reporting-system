@@ -59,11 +59,6 @@ export default
                         await this.$router.push({ name: 'admin_dashboard' });
                     }
                 }
-                else
-                {
-                    console.log("Retrying...");
-                    setTimeout(() => this.login(user), 1000);
-                }
             }
         }
     }

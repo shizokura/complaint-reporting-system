@@ -1,9 +1,10 @@
 <template>
     <div class="logo">
-        <div class="logo__img">
+        <img src="right.png" style="max-width: 500px;" alt="">
+        <!-- <div class="logo__img">
             <q-icon name="mdi-account-alert" />
         </div>
-        <div class="logo__name">COMPLAINT REPORT SYSTEM</div>
+        <div class="logo__name">COMPLAINT REPORT SYSTEM</div> -->
         <!-- <div class="logo__sub">Amet, consectur adipiscing elit, sed do euismod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labor nisi.</div> -->
     </div>
 </template>
@@ -18,7 +19,7 @@
         {
             color: #fff;
             padding: 25px;
-            background-color: #1976D2;
+            background-color: #883DFF;
             border-radius: 100%;
             font-size: 75px;
         }

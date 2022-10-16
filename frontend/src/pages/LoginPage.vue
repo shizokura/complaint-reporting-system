@@ -1,33 +1,42 @@
 <template>
     <div class="login-container">
-        <LogoComponent />
-        <div class="login">
-            <div class="login__title">Log-in your Account</div>
-            <q-form
-                @submit="onSubmit"
-                class="q-gutter-md"
-            >
-                <q-input
-                    filled
-                    v-model="email"
-                    label="Email Address"
-                    type="email"
-                />
+        <div class="login-main">
+            <div class="login">
+                <div class="login__title">Login</div>
+                <div class="login__subtitle">Doesn't have an account yet? <a @click="$router.push('/register')" href="javascript:">Sign Up</a></div>
+                <q-form
+                    @submit="onSubmit"
+                >
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <q-input
+                            outlined
+                            v-model="email"
+                            placeholder="you@example.com"
+                            type="email"
+                        />
+                    </div>
 
-                <q-input
-                    filled
-                    v-model="password"
-                    label="Password"
-                    type="password"
-                />
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Password</label>
+                        <q-input
+                            outlined
+                            v-model="password"
+                            placeholder="Enter 6 characters or more"
+                            type="password"
+                        />
+                    </div>
 
-                <div class="login__button">
-                    <q-btn no-caps unelevated :disabled="is_loading" :label="is_loading ? 'LOADING...' : 'Log-in'" type="submit" color="primary"/>
-                </div>
-                <div class="login__register">
-                    <p class="message">Not registered? <a @click="$router.push('/register')" href="javascript:">Create an account</a></p>
-                </div>
-            </q-form>
+                    <div class="login__button">
+                        <q-btn no-caps unelevated :disabled="is_loading" :label="is_loading ? 'LOADING...' : 'LOGIN'" type="submit" color="primary"/>
+                    </div>
+
+                    <!-- <div class="login__register">
+                        <p class="message">Not registered? <a @click="$router.push('/register')" href="javascript:">Create an account</a></p>
+                    </div> -->
+                </q-form>
+            </div>
+            <LogoComponent />
         </div>
     </div>
 </template>
@@ -42,17 +51,41 @@
     justify-content: center;
     align-items: center;
     padding: 15px;
-    background: #fff;
+    background-image: url('bg.svg');
+}
+
+.login-main
+{
     display: grid;
-    grid-template-columns: 500px auto;
-    column-gap: 100px;
+    grid-template-columns: 400px auto;
+    column-gap: 0px;
+    background-color: #fff;
+    padding: 0px 50px;
+    padding-right: 0;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.25);
 }
 
 .login
 {
-    width: 500px;
+    width: 400px;
     margin: auto;
     padding: 25px;
+    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    .form-group
+    {
+        label
+        {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.2px;
+        }
+        .q-input
+        {
+            margin-top: 5px;
+        }
+    }
     &__title
     {
         display: block;
@@ -61,15 +94,30 @@
         line-height: 1.2;
         text-align: center;
         font-weight: 700;
-        margin-bottom: 50px;
         text-align: left;
+        font-family: 'Montserrat', sans-serif;
+    }
+    &__subtitle
+    {
+        color: rgba(0,0,0,0.3);
+        font-size: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        margin-bottom: 25px;
+        a
+        {
+            color: #883DFF;
+        }
     }
     &__button
     {
+        margin-top: 25px;
         .q-btn
         {
             width: 100%;
             height: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
         }
     }
     &__register
@@ -82,7 +130,7 @@
             font-size: 12px;
             a
             {
-                color: #1976D2;
+                color: #883DFF;
                 text-decoration: none;
             }
         }
