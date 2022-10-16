@@ -98,8 +98,8 @@
 
 <script>
 import './MainLayout.scss';
-import { signOut } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
+import { signOut, deleteUser } from "firebase/auth";
+import { getDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
 import NotificationComponent from '../components/NotificationComponent.vue';
 
 export default
@@ -115,18 +115,32 @@ export default
     {
         if (!localStorage.getItem('user_data'))
         {
-            return this.$router.push({ name: 'login' });
+            return await this.$router.push({ name: 'login' });
         }
 
         let user_data = JSON.parse(localStorage.getItem('user_data'));
 
         if (user_data.role === 'Admin')
         {
-            this.$router.push({ name: 'admin_dashboard' });
+            return await this.$router.push({ name: 'admin_dashboard' });
+        }
+
+        if (user_data.is_rejected)
+        {
+            alert('Your account is rejected. Create new account to submit new application.');
+            this.$q.loading.show({ message: 'Deleting user...' });
+            await deleteDoc(doc(this.$db, "users", user_data.id));
+            await deleteUser(this.$auth.currentUser);
+            return this.logout();
+        }
+
+        if (!user_data.is_verified)
+        {
+            alert('Your account is unverified. Wait until your application is reviewed.');
+            return this.logout();
         }
 
         this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
-        console.log(this.user_data);
     },
     methods:
     {

@@ -207,7 +207,7 @@ If you provide us or our service providers with Personal Information of other pe
 
 <script>
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, where, query } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import LogoComponent from "src/components/LogoComponent.vue";
 import { v4 as uuidv4 } from 'uuid';
@@ -302,8 +302,22 @@ export default
                     address: this.address,
                     certificate_of_residency: url,
                     email: this.email,
-                    role: 'Member'
+                    role: 'Member',
+                    is_verified: false,
+                    is_rejected: false
                 });
+
+                let admins = await getDocs(query(collection(this.$db, "users"), where("role", "==", "Admin"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+                
+                await Promise.all(admins.map(async admin => 
+                {
+                    await this.$_createNotification(
+                    { 
+                        title: 'New Application',
+                        message: `${ this.first_name } ${ this.last_name } is waiting for review. Check approval tab.`,
+                        user_id: admin.id
+                    });
+                }));
 
                 this.$q.notify(
                 {

@@ -83,6 +83,15 @@
                     </q-item-section>
                 </q-item>
 
+                <q-item @click="$router.push({ name: 'admin_approval' })" clickable>
+                    <q-item-section avatar>
+                        <q-icon name="mdi-check-decagram" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Approval</q-item-label>
+                    </q-item-section>
+                </q-item>
+
                 <q-item @click="logout()" clickable>
                     <q-item-section avatar>
 

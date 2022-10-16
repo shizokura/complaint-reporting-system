@@ -31,6 +31,14 @@ export default
     {
         onAuthStateChanged(this.$auth, async (user) => 
         {
+            await this.login(user);
+            this.is_loading = false;
+        });
+    },
+    methods:
+    {
+        async login(user)
+        {
             if (user) 
             {
                 const uid = user.uid;
@@ -51,10 +59,13 @@ export default
                         await this.$router.push({ name: 'admin_dashboard' });
                     }
                 }
+                else
+                {
+                    console.log("Retrying...");
+                    setTimeout(() => this.login(user), 1000);
+                }
             }
-
-            this.is_loading = false;
-        });
+        }
     }
 }
 </script>

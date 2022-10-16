@@ -115,7 +115,7 @@
 
 <script>
 import './AdminUsers.scss';
-import { collection, getDocs, query, doc, setDoc, deleteDoc } from "firebase/firestore"; 
+import { collection, getDocs, query, doc, setDoc, deleteDoc, where } from "firebase/firestore"; 
 
 export default
 {
@@ -258,7 +258,7 @@ export default
     },
     async created()
     {
-        this.users = await getDocs(query(collection(this.$db, "users"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", true))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
     }
 }
 </script>

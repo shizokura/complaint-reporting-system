@@ -34,6 +34,7 @@ const routes =
             { name: 'admin_complaint_process', path: '/complaint/process', component: () => import('pages/Admin/AdminComplaintProcess.vue') },
             { name: 'admin_complaint_closed', path: '/complaint/closed', component: () => import('pages/Admin/AdminComplaintClosed.vue') },
             { name: 'admin_message', path: '/message', component: () => import('pages/Admin/AdminMessage.vue') },
+            { name: 'admin_approval', path: '/approval', component: () => import('pages/Admin/AdminApprovalUsers.vue') },
         ]
     },
 
