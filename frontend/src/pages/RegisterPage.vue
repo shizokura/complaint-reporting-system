@@ -139,6 +139,7 @@ If you provide us or our service providers with Personal Information of other pe
     // grid-template-columns: 500px auto;
     column-gap: 100px;
     background-image: url('/bg.svg');
+    background-size: cover;
 }
 
 .login
@@ -173,7 +174,7 @@ If you provide us or our service providers with Personal Information of other pe
         margin-bottom: 25px;
         a
         {
-            color: #883DFF;
+            color: #5588ff;
         }
     }
     &__button
@@ -196,7 +197,7 @@ If you provide us or our service providers with Personal Information of other pe
         margin-bottom: 25px;
         a
         {
-            color: #883DFF;
+            color: #5588ff;
         }
         .q-checkbox
         {
@@ -209,7 +210,7 @@ If you provide us or our service providers with Personal Information of other pe
             vertical-align: middle;
             a
             {
-                color: #883DFF;
+                color: #5588ff;
                 cursor: pointer;
             }
         }
@@ -224,7 +225,7 @@ If you provide us or our service providers with Personal Information of other pe
             font-size: 12px;
             a
             {
-                color: #883DFF;
+                color: #5588ff;
                 text-decoration: none;
             }
         }

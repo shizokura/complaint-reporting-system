@@ -52,7 +52,7 @@
             column-gap: 15px;
             &__item
             {
-                background-color: #883DFF;
+                background-color: #5588ff;
                 padding: 15px;
                 border-radius: 5px;
                 color: #fff;

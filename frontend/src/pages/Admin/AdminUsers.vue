@@ -32,7 +32,7 @@
                                 <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
                                 <td class="text-center">{{ user.phone_number }}</td>
                                 <td class="text-center">
-                                    <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="Update" unelevated />
+                                    <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="View" unelevated />
                                     <q-btn @click="remove(user.id)" color="red" label="Delete" unelevated />
                                 </td>
                             </tr>
@@ -45,7 +45,7 @@
         <q-dialog full-width v-model="is_update_dialog">
             <q-card>
                 <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">Update User</div>
+                    <div class="text-h6">View User</div>
                     <q-space />
                     <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
@@ -58,6 +58,7 @@
                         >
                             <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 15px;">
                                 <q-input
+                                    readonly
                                     filled
                                     v-model="update_data.first_name"
                                     label="First Name"
@@ -66,6 +67,7 @@
                                 />
 
                                 <q-input
+                                    readonly
                                     filled
                                     v-model="update_data.last_name"
                                     label="Last Name"
@@ -76,6 +78,7 @@
 
                             <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 15px;">
                                 <q-input
+                                    readonly
                                     filled
                                     type="date"
                                     v-model="update_data.birthdate"
@@ -85,6 +88,7 @@
                                 />
 
                                 <q-select
+                                    readonly
                                     filled
                                     v-model="update_data.gender"
                                     label="Gender"
@@ -95,6 +99,7 @@
                             </div>
 
                             <q-input
+                                readonly
                                 filled
                                 v-model="update_data.phone_number"
                                 label="Phone Number"
@@ -102,9 +107,9 @@
                                 :rules="[ val => val && val.length > 0 || 'Please type something']"
                             />
 
-                            <div style="text-align: right;">
+                            <!-- <div style="text-align: right;">
                                 <q-btn label="Submit" type="submit" color="primary"/>
-                            </div>
+                            </div> -->
                         </q-form>
                     </div>
                 </q-card-section>

@@ -1,6 +1,6 @@
 <template>
     <div class="logo">
-        <img src="right.png" style="max-width: 500px;" alt="">
+        <img src="/logo.png" style="max-width: 470px;" alt="">
         <!-- <div class="logo__img">
             <q-icon name="mdi-account-alert" />
         </div>
@@ -19,7 +19,7 @@
         {
             color: #fff;
             padding: 25px;
-            background-color: #883DFF;
+            background-color: #5588ff;
             border-radius: 100%;
             font-size: 75px;
         }

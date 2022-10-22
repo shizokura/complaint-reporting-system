@@ -52,6 +52,7 @@
     align-items: center;
     padding: 15px;
     background-image: url('/bg.svg');
+    background-size: cover;
 }
 
 .login-main
