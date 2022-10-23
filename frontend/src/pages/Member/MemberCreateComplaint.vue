@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <div class="form-group__label">Complaint Category</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.id ? true : false"  v-model="form_data.category" dense bg-color="white" type="text" filled />
+                            <q-select :readonly="$route.params.id ? true : false"  v-model="form_data.category" :options="['Communications', 'Humaneness/Caring', 'Institutional Issues', 'Patient Rights', 'Quality', 'Safety', 'Timing and Access', 'Environment']" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
