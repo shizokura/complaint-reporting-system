@@ -1,9 +1,8 @@
 <template>
     <div class="admin-dashboard">
-        <div class="admin-dashboard__title">Data Analytics</div>
         <div class="admin-dashboard__body">
             <div class="summary">
-                <div class="summary__item">
+                <div @click="$router.push({ name: 'admin_users' })" class="summary__item">
                     <div class="icon"><q-icon name="mdi-account" /></div>
                     <div class="name">({{ registered_users_count }}) Registered Users</div>
                 </div>
@@ -24,6 +23,7 @@
                     <div class="name">({{ closed_complaints_count }}) Closed Complaint/s</div>
                 </div>
             </div>
+            <div class="admin-dashboard__title">Data Analytics</div>
             <div class="chart">
                 <canvas id="chart_canvas" width="100%" height="400"></canvas>
             </div>
@@ -41,6 +41,7 @@
         margin-bottom: 15px;
         font-weight: 700;
         color: rgba(0,0,0,0.80);
+        margin-top: 25px;
     }
     &__body
     {
@@ -52,10 +53,11 @@
             column-gap: 15px;
             &__item
             {
-                background-color: #5588ff;
+                background-color: #1976D2;
                 padding: 15px;
                 border-radius: 5px;
                 color: #fff;
+                cursor: pointer;
                 .icon
                 {
                     .q-icon
