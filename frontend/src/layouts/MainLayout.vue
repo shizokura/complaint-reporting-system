@@ -125,6 +125,11 @@ export default
             return await this.$router.push({ name: 'admin_dashboard' });
         }
 
+        if (!user_data.is_email_verified)
+        {
+            return await this.$router.push({ name: 'verification' });
+        }
+
         if (user_data.is_rejected)
         {
             alert('Your account is rejected. Create new account to submit new application.');

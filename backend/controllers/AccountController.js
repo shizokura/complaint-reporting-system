@@ -1,6 +1,8 @@
 const db_user = require('../models/db_user');
 const _db_user = new db_user();
 
+const nodemailer = require('nodemailer');
+
 module.exports =
 {
     async login(req, res)
@@ -47,6 +49,46 @@ module.exports =
             keywords: `${ req.body.first_name } ${ req.body.middle_name } ${ req.body.last_name }`,
             role: 'Member',
             is_verified: false
+        });
+
+        res.send(true);
+    },
+    async verify(req, res)
+    {
+        let code = req.body.code;
+        let email = req.body.email;
+
+        // send via email
+        var transporter = nodemailer.createTransport(
+        {
+            service: 'gmail',
+            auth: 
+            {
+                user: 'noreply.online.crs@gmail.com',
+                pass: 'rbmlqogeyqtpdylw'
+            }
+        });
+        
+        var mailOptions = 
+        {
+            from: 'noreply.online.crs@gmail.com',
+            to: email,
+            subject: 'Email Verification',
+            html: `<div>
+                <div>Your code is <strong>${ code }</strong></div>
+            </div>`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info)
+        {
+            if (error) 
+            {
+                console.log(error);
+            } 
+            else 
+            {
+                console.log('Email sent: ' + info.response);
+            }
         });
 
         res.send(true);

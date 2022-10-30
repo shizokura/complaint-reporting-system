@@ -23,6 +23,12 @@ const routes =
         ]
     },
 
+    { 
+        path: '/verification',
+        name: 'verification',
+        component: () => import('pages/Member/MemberVerification.vue')
+    },
+
     {
         path: '/admin',
         component: () => import('layouts/AdminLayout.vue'),

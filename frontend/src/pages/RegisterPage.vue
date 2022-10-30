@@ -239,6 +239,7 @@ import { doc, setDoc, collection, getDocs, where, query } from "firebase/firesto
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // import LogoComponent from "src/components/LogoComponent.vue";
 import { v4 as uuidv4 } from 'uuid';
+import CONFIG from 'app/config';
 
 export default
 {
@@ -321,6 +322,9 @@ export default
                     message: 'Saving Data...'
                 });
 
+                // generate 6 digit code
+                let code = Math.floor(100000 + Math.random() * 900000);
+
                 await setDoc(doc(this.$db, "users", user.uid), 
                 {
                     first_name: this.first_name,
@@ -332,7 +336,9 @@ export default
                     email: this.email,
                     role: 'Member',
                     is_verified: false,
-                    is_rejected: false
+                    is_rejected: false,
+                    is_email_verified: false,
+                    code
                 });
 
                 let admins = await getDocs(query(collection(this.$db, "users"), where("role", "==", "Admin"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
@@ -346,6 +352,8 @@ export default
                         user_id: admin.id
                     });
                 }));
+
+                await this.$axios.post(`${ CONFIG.API_URL }/verify`, { id: user.uid, code, email: this.email });
 
                 this.$q.notify(
                 {

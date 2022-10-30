@@ -7,6 +7,7 @@ const AdminController = require('../controllers/AdminController');
 // Guest
 router.post('/login', AccountController.login);
 router.post('/register', AccountController.register);
+router.post('/verify', AccountController.verify);
 
 // Admin
 router.post('/admin/list-users', AdminController.listUsers);
