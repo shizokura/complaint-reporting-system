@@ -139,6 +139,7 @@
 <script>
 import { signOut } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import CONFIG from 'app/config';
 
 export default
 {
@@ -159,10 +160,27 @@ export default
     },
     methods:
     {
-        resend()
+        async resend()
         {
+            this.$q.loading.show({
+                message: 'Resending code...'
+            });
+
+            // generate code
+            let code = Math.floor(100000 + Math.random() * 900000);
+
+            // update user code
+            await setDoc(doc(this.$db, "users", this.user_data.id), { code }, { merge: true });
+
             // resend email
-            // send params id and email
+            await this.$axios.post(`${ CONFIG.API_URL }/verify`, { id: this.user_data.id, code, email: this.user_data.email });
+
+            this.$q.loading.hide();
+
+            this.$q.notify({
+                color: 'green',
+                message: 'Successfully resend'
+            });
         },
         logout()
         {
