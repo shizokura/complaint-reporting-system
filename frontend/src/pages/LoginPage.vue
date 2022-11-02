@@ -18,7 +18,10 @@
                     </div>
 
                     <div class="form-group" style="margin-top: 15px;">
-                        <label>Password</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));">
+                            <label>Password</label>
+                            <div @click="$router.push({ name: 'forgot' })" style="text-align: right; font-size: 0.8rem; font-weight: 600;"><a href="javascript:">Forgot Password?</a></div>
+                        </div>
                         <q-input
                             outlined
                             v-model="password"
@@ -107,7 +110,7 @@
         margin-bottom: 25px;
         a
         {
-            color: #883DFF;
+            color: #5588ff;
         }
     }
     &__button
@@ -131,7 +134,7 @@
             font-size: 12px;
             a
             {
-                color: #883DFF;
+                color: #5588ff;
                 text-decoration: none;
             }
         }
