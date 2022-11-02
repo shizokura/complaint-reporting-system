@@ -48,9 +48,9 @@
                         <q-input v-else v-model="form_data.proof" dense bg-color="white" type="text" filled readonly />
                     </div>
                 </div>
-                <div class="form-group" style="text-align: center;">
+                <!-- <div class="form-group" style="text-align: center;">
                     <q-checkbox :style="$route.params.id ? 'opacity: 0.5; pointer-events: none;' : ''" v-model="form_data.is_anonymous" label="Do you want it to be anonymous?" />
-                </div>
+                </div> -->
                 <div v-if="$route.params.id ? false : true"  style="text-align: center;">
                     <q-btn type="submit" label="Submit" no-caps unelevated color="primary" />
                 </div>

@@ -32,6 +32,7 @@
                                 <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
                                 <td class="text-center">{{ user.phone_number }}</td>
                                 <td class="text-center">
+                                    <q-btn @click="setAdmin(user.id)" style="margin-right: 15px;" color="primary" label="Set As Admin" unelevated />
                                     <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="View" unelevated />
                                     <q-btn @click="remove(user.id)" color="red" label="Delete" unelevated />
                                 </td>
@@ -141,6 +142,17 @@ export default
     },
     methods:
     {
+        async setAdmin(id)
+        {
+            this.$q.loading.show({
+                message: 'Setting as admin...'
+            });
+
+            await setDoc(doc(this.$db, "users", id), { role: 'Admin' }, { merge: true });
+            await this.loadData();
+            
+            this.$q.loading.hide();
+        },
         async remove(id)
         {
             try
@@ -259,11 +271,15 @@ export default
             const d = new Date(date);
             console.log(`${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`);
             return `${ monthNames[d.getMonth()] } ${ d.getDate() }, ${ d.getFullYear() }`;
+        },
+        async loadData()
+        {
+            this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", true), where("role", "==", "Member"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
         }
     },
     async created()
     {
-        this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", true))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        this.loadData();
     }
 }
 </script>
