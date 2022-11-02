@@ -1,4 +1,4 @@
-import { collection, addDoc, doc, setDoc, increment } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, increment, getDocs, query, where, deleteDoc } from "firebase/firestore";
 
 export default
 {
@@ -27,6 +27,17 @@ export default
                 notification_count: 0
             }, 
             { merge: true });
+        },
+        async $_clearAllNotifications({ user_id })
+        {
+            let notifications = await getDocs(query(collection(this.$db, 'notifications'), where('user_id', '==', user_id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+
+            await Promise.all(notifications.map(async notification =>
+            {
+                await deleteDoc(doc(this.$db, "notifications", notification.id));
+            }));
+
+            console.log(notifications);
         }
     }
 }

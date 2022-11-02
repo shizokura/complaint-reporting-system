@@ -7,6 +7,10 @@
                     <div class="item__label">{{ notification.title }}</div>
                     <div class="item__message">{{ notification.message }}</div>
                 </div>
+
+                <div style="text-align: center;">
+                    <a @click="clear()" href="javascript:">Clear all notification</a>
+                </div>
             </template>
             <div style="text-align: center;" v-else>
                 No notification yet
@@ -42,6 +46,20 @@ export default
     },
     methods:
     {
+        async clear()
+        {
+            let user_data = JSON.parse(localStorage.getItem("user_data"));
+
+            this.$q.loading.show({
+                message: 'Clearing all notifications...'
+            });
+
+            await this.$_clearAllNotifications({ user_id: user_data.id });
+
+            this.notifications = [];
+
+            this.$q.loading.hide();
+        },
         action(data)
         {
             let user_data = JSON.parse(localStorage.getItem("user_data"));
