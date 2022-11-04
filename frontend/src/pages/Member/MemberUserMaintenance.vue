@@ -3,17 +3,22 @@
         <div class="member-container__header">User Profile</div>
         <div class="member-container__body">
             <q-form @submit="submit()" class="form">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div style="margin-bottom: 15px;"><img :src="form_data.photo || 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'" style="width: 150px; height: 150px; border-radius: 100%; object-fit: cover;" /></div>
+                    <q-btn @click="$refs.profile_image.click()" label="Upload" unelevated color="primary" />
+                    <input ref="profile_image" @change="onUpload" type="file" style="display: none;" name="" id="">
+                </div>
                 <div class="two-columns">
                     <div class="form-group">
                         <div class="form-group__label">First name</div>
                         <div class="form-group__input">
-                            <q-input v-model="form_data.first_name" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.first_name" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Last name</div>
                         <div class="form-group__input">
-                            <q-input v-model="form_data.last_name" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.last_name" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                 </div>
@@ -21,42 +26,42 @@
                     <div class="form-group">
                         <div class="form-group__label">Date of Birth</div>
                         <div class="form-group__input">
-                            <q-input v-model="form_data.birthdate" dense bg-color="white" type="date" filled />
+                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.birthdate" dense bg-color="white" type="date" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Gender</div>
                         <div class="form-group__input">
-                            <q-select :options="[ 'Male', 'Female' ]" v-model="form_data.gender" dense bg-color="white" type="text" filled />
+                            <q-select :readonly="$route.params.view ? true : false" :options="[ 'Male', 'Female' ]" v-model="form_data.gender" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Phone No.</div>
                         <div class="form-group__input">
-                            <q-input v-model="form_data.phone_number" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.phone_number" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group__label">Complete Address</div>
                     <div class="form-group__input">
-                        <q-input v-model="form_data.address" dense bg-color="white" type="text" filled />
+                        <q-input :readonly="$route.params.view ? true : false" v-model="form_data.address" dense bg-color="white" type="text" filled />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group__label">Verification Identify</div>
                     <div class="form-group__input">
-                        <q-file v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID" filled />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID" filled />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group__label">Certificate of Residency</div>
                     <div class="form-group__input">
-                        <q-file v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload" filled />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload" filled />
                     </div>
                 </div>
                 <div v-if="$route.params.id ? false : true"  style="text-align: center;">
-                    <q-btn type="submit" label="Update" no-caps unelevated color="primary" />
+                    <q-btn v-if="$route.params.view ? false : true" type="submit" label="Update" no-caps unelevated color="primary" />
                 </div>
             </q-form>
         </div>
@@ -82,11 +87,37 @@ export default
             phone_number: null,
             address: null,
             identification: null,
-            certification: null
+            certification: null,
+            photo: null
         }
     }),
     methods:
     {
+        async onUpload(event)
+        {
+            try
+            {
+                this.$q.loading.show({
+                    message: 'Uploading image...'
+                });
+
+                let file = event.target.files[0];
+                let extension = file.name.split('.');
+                extension = extension[extension.length - 1];
+                const storageRef = ref(this.$storage, `${ uuidv4() }.${ extension }`);
+                await uploadBytes(storageRef, file);
+                let url = await getDownloadURL(storageRef);
+                this.form_data.photo = url;
+            }
+            catch (e)
+            {
+                console.log(e.message);
+            } 
+            finally
+            {
+                this.$q.loading.hide();
+            }
+        },
         async submit()
         {
             try
@@ -140,6 +171,8 @@ export default
                 });
 
                 this.$router.go(-1);
+
+                window.location.reload();
             }
             catch (e)
             {
@@ -167,6 +200,7 @@ export default
         this.form_data.phone_number = user_data.phone_number;
         this.form_data.address = user_data.address;
         this.form_data.gender = user_data.gender ? user_data.gender : 'Male';
+        this.form_data.photo = user_data.photo;
         // this.form_data.identification = user_data.identification;
         // this.form_data.certification = user_data.certification;
     }

@@ -18,7 +18,21 @@
                         <q-badge v-if="user_data.notification_count" style="margin-top: 5px;" color="red" floating>{{ user_data.notification_count }}</q-badge>
                     </q-btn>
                     {{ user_data.first_name }} {{ user_data.last_name }}
-                    <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
+                    <q-btn icon="mdi-account" unelevated style="margin-left: 15px;">
+                        <q-menu>
+                            <div style="padding: 15px; width: 200px;">
+                                <div style="padding 25px; background-color: #fff;">
+                                    <div style="text-align: center;">
+                                        <img style="width: 100px; height: 100px; object-fit: cover; border-radius: 100%;" :src="user_data.photo || 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'" alt="">
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; text-align: center; margin-top: 15px; row-gap: 5px;">
+                                        <a style="text-decoration: none; color: #000; cursor: pointer; font-weight: 400;" @click="$router.push({ name: 'member_user_maintenance', params: { view: true } })" href="javascript:">User Profile</a>
+                                        <a style="text-decoration: none; color: #000; cursor: pointer; font-weight: 400;" href="javascript:">Change Password</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </q-menu>
+                    </q-btn>
                 </q-toolbar-title>
             </q-toolbar>
         </q-header>

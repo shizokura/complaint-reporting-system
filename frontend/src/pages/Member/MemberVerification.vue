@@ -203,8 +203,11 @@ export default
                 message: 'Verifying code...'
             });
 
+            let user_data = await getDoc(doc(this.$db, "users", this.user_data.id));
+            user_data = Object.assign({}, user_data.data(), { id: user_data.id });
+
             // check if code is same
-            if (String(this.user_data.code) !== String(this.code))
+            if (String(user_data.code) !== String(this.code))
             {
                 this.$q.notify({
                     color: 'red',
@@ -216,7 +219,7 @@ export default
 
             // then update user data to verified
             await setDoc(doc(this.$db, 'users', this.user_data.id), { is_email_verified: true }, { merge: true });
-            let user_data = await getDoc(doc(this.$db, "users", this.user_data.id));
+            user_data = await getDoc(doc(this.$db, "users", this.user_data.id));
             user_data = Object.assign({}, user_data.data(), { id: user_data.id });
             localStorage.setItem('user_data', JSON.stringify(user_data));
 
