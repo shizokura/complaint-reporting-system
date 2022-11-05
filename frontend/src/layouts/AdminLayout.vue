@@ -18,7 +18,7 @@
                         <q-badge v-if="user_data.notification_count" style="margin-top: 5px;" color="red" floating>{{ user_data.notification_count }}</q-badge>
                     </q-btn>
                     {{ user_data.first_name }} {{ user_data.last_name }}
-                    <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" />
+                    <!-- <q-btn icon="mdi-account" unelevated style="margin-left: 15px;" /> -->
                 </q-toolbar-title>
             </q-toolbar>
         </q-header>
