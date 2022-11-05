@@ -27,7 +27,7 @@
                                     </div>
                                     <div style="display: flex; flex-direction: column; text-align: center; margin-top: 15px; row-gap: 5px;">
                                         <a style="text-decoration: none; color: #000; cursor: pointer; font-weight: 400;" @click="$router.push({ name: 'member_user_maintenance', params: { view: true } })" href="javascript:">User Profile</a>
-                                        <a style="text-decoration: none; color: #000; cursor: pointer; font-weight: 400;" href="javascript:">Change Password</a>
+                                        <a style="text-decoration: none; color: #000; cursor: pointer; font-weight: 400;" @click="$router.push({ name: 'member_change_password' })" href="javascript:">Change Password</a>
                                     </div>
                                 </div>
                             </div>

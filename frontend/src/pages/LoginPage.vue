@@ -210,6 +210,10 @@ export default
                 {
                     message = 'User not found';
                 }
+                else if (errorCode === 'auth/wrong-password')
+                {
+                    message = 'Invalid password';
+                }
 
                 if (message)
                 {
