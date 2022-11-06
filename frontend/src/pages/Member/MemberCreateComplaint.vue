@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="form-group__label">Name of Respondents</div>
+                        <div class="form-group__label">Name of Complainants</div>
                         <div class="form-group__input">
                             <q-input :readonly="$route.params.id ? true : false"  v-model="form_data.name" dense bg-color="white" type="text" filled />
                         </div>
