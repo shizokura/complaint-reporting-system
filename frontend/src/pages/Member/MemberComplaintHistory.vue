@@ -9,21 +9,21 @@
             <div class="table">
                 <div class="table__filter">
                     <div></div>
-                    <q-input type="text" bg-color="white" filled placeholder="Search..." />
+                    <q-input v-model="search" type="text" bg-color="white" filled placeholder="Search..." />
                 </div>
                 <div class="table__table">
                     <q-markup-table separator="cell" flat>
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
+                                <th class="text-center">Complaint File #</th>
                                 <th class="text-center">Complaint Type</th>
                                 <th class="text-center">Creation date</th>
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody v-if="complaints.length">
-                            <tr v-for="(complaint, index) in complaints" :key="index">
-                                <td class="text-center">{{ complaint.id_number }}</td>
+                            <tr v-for="(complaint, index) in complaints_filtered" :key="index">
+                                <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>
@@ -49,7 +49,8 @@ export default
     name: 'MemberComplaint',
     data: () => 
     ({
-        complaints: []
+        complaints: [],
+        search: ''
     }),
     props:
     {
@@ -57,7 +58,10 @@ export default
     },
     computed:
     {
-
+        complaints_filtered()
+        {
+            return this.complaints.filter(complaint => complaint.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
+        }
     },
     methods:
     {

@@ -220,7 +220,7 @@ export default
                     this.$q.notify(
                     {
                         color: 'red',
-                        message: message
+                        message: message || error.message
                     });
                 }
 

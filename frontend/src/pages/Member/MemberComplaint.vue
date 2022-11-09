@@ -14,7 +14,7 @@
                     <q-markup-table separator="cell" flat>
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
+                                <th class="text-center">Complaint File #</th>
                                 <th class="text-center">Complaint Type</th>
                                 <th class="text-center">Creation date</th>
                                 <th class="text-center">Status</th>
@@ -23,7 +23,7 @@
                         </thead>
                         <tbody v-if="complaints.length">
                             <tr v-for="(complaint, index) in complaints" :key="index">
-                                <td class="text-center">{{ complaint.id_number }}</td>
+                                <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>

@@ -14,7 +14,7 @@
                     <q-markup-table separator="cell" flat>
                         <thead>
                             <tr>
-                                <th class="text-center">#</th>
+                                <th class="text-center">Complaint File #</th>
                                 <th class="text-center">Complainant</th>
                                 <th class="text-center">Complaint Type</th>
                                 <th class="text-center">Creation date</th>
@@ -24,7 +24,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="(complaint, index) in complaints_filtered" :key="index">
-                                <td class="text-center">{{ complaint.id_number }}</td>
+                                <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
                                 <td class="text-center">{{ complaint.name }}</td>
                                 <td class="text-center">{{ complaint.type }}</td>
                                 <td class="text-center">{{ dateFormat(new Date(complaint.date_created.seconds * 1000)) }}</td>
@@ -41,13 +41,14 @@
             <div style="background-color: #fff;">
                 <div class="admin-container">
                     <q-btn @click="detail_dialog = false" class="admin-container__back" color="primary" unelevated label="Back" no-caps />
-                    <q-btn v-if="selected_data.status !== 'closed'" @click="closeComplaint()" style="margin-left: 15px;" class="admin-container__back" color="primary" unelevated label="Close this complaint" no-caps />
+                    <q-btn v-if="selected_data.status !== 'closed'" @click="prompt = true" style="margin-left: 15px;" class="admin-container__back" color="primary" unelevated label="Action" no-caps />
+                    <q-btn v-else-if="selected_data.status === 'closed'" disabled style="margin-left: 15px;" class="admin-container__back" color="primary" unelevated label="Action Taken" no-caps />
                     <div class="admin-container__header">Complaints Details</div>
                     <div class="admin-container__body">
                         <div class="view-complaint">
                             <div class="item">
                                 <div class="item__label">Complaint No. #:</div>
-                                <div class="item__value">{{ selected_data.id_number }}</div>
+                                <div class="item__value">{{ selected_data.id_number.toString().padStart(5, '0') }}</div>
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Type:</div>
@@ -77,10 +78,30 @@
                                 <div class="item__label">Complaint Status:</div>
                                 <div class="item__value">{{ getStatus(selected_data.status) }}</div>
                             </div>
+                            <div v-if="selected_data.report" class="item">
+                                <div class="item__label">Resolution:</div>
+                                <div class="item__value">{{ selected_data.report }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </q-dialog>
+
+        <q-dialog v-model="prompt" persistent>
+            <q-card style="min-width: 350px">
+                <q-card-section>
+                    <div class="text-h6">Resolution - Narrative Report</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    <q-input type="textarea" dense v-model="report" autofocus />
+                </q-card-section>
+
+                <q-card-actions align="right" class="text-primary">
+                    <q-btn @click="closeComplaint()" flat label="Submit" v-close-popup />
+                </q-card-actions>
+            </q-card>
         </q-dialog>
     </div>
 </template>
@@ -99,7 +120,9 @@ export default
         selected_data: null,
         selected_index: null,
         complaints: [],
-        search: ''
+        search: '',
+        prompt: false,
+        report: ''
     }),
     props:
     {
@@ -161,7 +184,7 @@ export default
                     message: 'Closing this complaint...'
                 });
 
-                await setDoc(doc(this.$db, "complaints", this.selected_data.id), { status: 'closed' }, { merge: true });
+                await setDoc(doc(this.$db, "complaints", this.selected_data.id), { status: 'closed', report: this.report }, { merge: true });
 
                 await this.$_createNotification(
                 { 
@@ -172,6 +195,7 @@ export default
 
                 this.complaints = this.complaints.filter((complaint, index2) => index2 !== this.selected_index);
                 this.detail_dialog = false;
+                this.report = '';
             }
             catch (e)
             {
@@ -197,7 +221,7 @@ export default
                 await this.$_createNotification(
                 { 
                     title: `Complaint Status Changed`, 
-                    message: `Complaint #${ data.id_number } is on process.`, 
+                    message: `Complaint #${ data.id_number.toString().padStart(5, '0') } is on process.`, 
                     user_id: data.user_id
                 });
 
