@@ -67,11 +67,24 @@
     padding: 0px 50px;
     padding-right: 0;
     box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.25);
+    @media screen and (max-width: 991px)
+    {
+        padding: 50px;
+        .logo
+        {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 550px)
+    {
+        grid-template-columns: auto;
+        padding: 5px;
+    }
 }
 
 .login
 {
-    width: 400px;
+    width: 100%;
     margin: auto;
     padding: 25px;
     box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.05);
@@ -108,6 +121,10 @@
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
         margin-bottom: 25px;
+        @media screen and (max-width: 400px)
+        {
+            font-size: 0.8rem;
+        }
         a
         {
             color: #5588ff;

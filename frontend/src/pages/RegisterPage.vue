@@ -148,6 +148,14 @@ If you provide us or our service providers with Personal Information of other pe
     margin: auto;
     background-color: #fff;
     padding: 50px;
+    @media screen and (max-width: 750px)
+    {
+        width: 100%;
+    }
+    @media screen and (max-width: 500px)
+    {
+        padding: 25px;
+    }
     .two-columns
     {
         display: grid;
@@ -164,6 +172,10 @@ If you provide us or our service providers with Personal Information of other pe
         font-weight: 700;
         text-align: left;
         font-family: 'Montserrat', sans-serif;
+        @media screen and (max-width: 600px)
+        {
+            font-size: 1.5rem;
+        }
     }
     &__subtitle
     {
@@ -172,6 +184,10 @@ If you provide us or our service providers with Personal Information of other pe
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
         margin-bottom: 25px;
+        @media screen and (max-width: 600px)
+        {
+            font-size: 0.8rem;
+        }
         a
         {
             color: #5588ff;
@@ -208,6 +224,10 @@ If you provide us or our service providers with Personal Information of other pe
         {
             display: inline-block;
             vertical-align: middle;
+            @media screen and (max-width: 560px)
+            {
+                font-size: 0.8rem;
+            }
             a
             {
                 color: #5588ff;
