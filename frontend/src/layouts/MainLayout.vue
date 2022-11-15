@@ -42,7 +42,7 @@
             bordered
         >
             <q-item-label header style="text-align: center; font-size: 2rem; font-weight: 700;">
-                e-CRS
+                eCRS
             </q-item-label>
 
             <q-separator />
@@ -71,7 +71,7 @@
                         <q-icon name="mdi-history" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>Complaint History</q-item-label>
+                        <q-item-label>Recent Complaints</q-item-label>
                     </q-item-section>
                 </q-item>
 

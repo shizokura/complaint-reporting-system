@@ -10,6 +10,10 @@
             text-align: center;
             column-gap: 15px;
             row-gap: 15px;
+            @media screen and (max-width: 400px)
+            {
+                grid-template-columns: auto;
+            }
             &__item
             {
                 background-color: #5588ff;

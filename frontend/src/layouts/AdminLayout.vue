@@ -28,7 +28,7 @@
             bordered
         >
             <q-item-label header style="text-align: center; font-size: 2rem; font-weight: 700;">
-                e-CRS
+                eCRS
             </q-item-label>
 
             <q-separator />
