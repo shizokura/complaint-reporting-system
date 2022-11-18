@@ -60,7 +60,7 @@
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Details:</div>
-                                <div class="item__value">{{ selected_data.type }}</div>
+                                <div class="item__value">{{ selected_data.details }}</div>
                             </div>
                             <div class="item">
                                 <div class="item__label">Complainant Name:</div>
@@ -99,6 +99,7 @@
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
+                    <q-btn color="red" @click="prompt = false" flat label="Back" v-close-popup />
                     <q-btn @click="closeComplaint()" flat label="Submit" v-close-popup />
                 </q-card-actions>
             </q-card>
