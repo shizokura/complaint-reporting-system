@@ -15,7 +15,7 @@
                         v-model="code"
                     />
                     <div class="login__button" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 15px;">
-                        <q-btn @click="logout()" style="height: 56px;" no-caps unelevated label="CANCEL" type="submit" color="primary"/>
+                        <q-btn @click="logout()" style="height: 56px;" no-caps unelevated label="CANCEL" type="button" color="primary"/>
                         <q-btn style="height: 56px;" no-caps unelevated :label="is_loading ? 'LOADING...' : 'CONTINUE'" type="submit" color="primary"/>
                     </div>
                 </div>

@@ -121,6 +121,20 @@ If you provide us or our service providers with Personal Information of other pe
                 </q-card-actions>
             </q-card>
         </q-dialog>
+
+        <q-dialog v-model="done_dialog" persistent>
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Message</div>
+                </q-card-section>
+
+                <q-separator />
+
+                <q-card-section class="scroll">
+                    Registered successfully, <a @click="login()" href="javascript:">click here to login</a>.
+                </q-card-section>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -254,7 +268,7 @@ If you provide us or our service providers with Personal Information of other pe
 </style>
 
 <script>
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, where, query } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // import LogoComponent from "src/components/LogoComponent.vue";
@@ -282,10 +296,30 @@ export default
         is_loading: false,
         is_agree: false,
         terms_dialog: false,
-        privacy_dialog: false
+        privacy_dialog: false,
+        done_dialog: false
     }),
     methods:
     {
+        async login()
+        {
+            this.$q.loading.show();
+            await signOut(this.$auth);
+            localStorage.removeItem('user_data');
+            this.$router.push({ name: 'login' });
+            this.$q.loading.hide();
+        },
+        getAge(birthDateString)
+        {
+            var today = new Date();
+            var birthDate = new Date(birthDateString);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        },
         async onSubmit()
         {
             if (this.is_loading)
@@ -319,6 +353,20 @@ export default
                 {
                     const error = new Error("message");
                     error.code = "auth/fields-incomplete";
+                    throw error;
+                }
+
+                if (18 > this.getAge(this.birthdate))
+                {
+                    const error = new Error("message");
+                    error.code = "auth/age-required";
+                    throw error;
+                }
+
+                if (11 !== this.phone_number.length)
+                {
+                    const error = new Error("message");
+                    error.code = "auth/phone-limit";
                     throw error;
                 }
 
@@ -381,7 +429,7 @@ export default
                     message: 'You have successfully registered.'
                 });
 
-                window.location.reload();
+                this.done_dialog = true;
             }
             catch (error)
             {
@@ -408,6 +456,14 @@ export default
                 else if (errorCode === 'auth/fields-incomplete')
                 {
                     message = 'Fill up all fields';
+                }
+                else if (errorCode === 'auth/age-required')
+                {
+                    message = 'Age should be greater than 18.';
+                }
+                else if (errorCode === 'auth/phone-limit')
+                {
+                    message = 'Phone number should be 11 digits only.';
                 }
                 else
                 {
