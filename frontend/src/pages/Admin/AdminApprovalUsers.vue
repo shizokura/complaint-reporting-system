@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { collection, getDocs, query, doc, setDoc, deleteDoc, where } from "firebase/firestore"; 
+import { collection, getDocs, query, doc, setDoc, deleteDoc, where, onSnapshot } from "firebase/firestore"; 
 
 export default
 {
@@ -70,7 +70,8 @@ export default
     data: () => 
     ({
         users: [],
-        search: ''
+        search: '',
+        unsub: null
     }),
     computed:
     {
@@ -134,12 +135,25 @@ export default
         },
         async initialize()
         {
-            this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", false))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+            // this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", false))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+
+            if (this.unsub) this.unsub();
+            this.unsub = onSnapshot(query(collection(this.$db, "users"), where("is_verified", "==", false)), (snap) => {
+                this.users = [];
+                snap.forEach((doc) => {
+                    this.users.push(Object.assign({}, doc.data(), { id: doc.id }))
+                })
+            });
         }
     },
     async mounted()
     {
         this.initialize();
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

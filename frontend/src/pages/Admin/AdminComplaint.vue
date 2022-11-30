@@ -110,7 +110,7 @@
 <script>
 import './AdminComplaint.scss';
 
-import { query, orderBy, collection, getDocs, where, setDoc, doc } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, setDoc, doc, onSnapshot } from "firebase/firestore"; 
 
 export default
 {
@@ -123,7 +123,8 @@ export default
         complaints: [],
         search: '',
         prompt: false,
-        report: ''
+        report: '',
+        unsub: null
     }),
     props:
     {
@@ -245,7 +246,19 @@ export default
     },
     async mounted()
     {
-        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("status", "==", this.status))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+        // this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("status", "==", this.status))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+
+        this.unsub = onSnapshot(query(collection(this.$db, "complaints"), orderBy("id_number"), where("status", "==", this.status)), (snap) => {
+            this.complaints = [];
+            snap.forEach((doc) => {
+                this.complaints.push(Object.assign({}, doc.data(), { id: doc.id }))
+            })
+        })
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

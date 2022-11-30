@@ -113,7 +113,7 @@
 <script>
 import './MainLayout.scss';
 import { signOut, deleteUser } from "firebase/auth";
-import { getDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 import NotificationComponent from '../components/NotificationComponent.vue';
 
 export default
@@ -122,7 +122,8 @@ export default
     data: () => 
     ({
         leftDrawerOpen: true,
-        user_data: null
+        user_data: null,
+        unsub: null
     }),
     components: { NotificationComponent },
     async created()
@@ -158,8 +159,19 @@ export default
             alert('Your account is unverified. Wait until your application is reviewed.');
             return this.logout();
         }
+        
+        this.unsub = onSnapshot(
+            doc(this.$db, "users", user_data.id),
+            (doc) => {
+                this.user_data = Object.assign({}, doc.data(), { id: doc.id });
+                console.log(this.user_data);
+            },
+            (error) => {
+                // handle error
+            }
+        );
 
-        this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
+        // this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
     },
     methods:
     {
@@ -178,6 +190,11 @@ export default
                 this.$q.loading.hide();
             }, 1000);
         }
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

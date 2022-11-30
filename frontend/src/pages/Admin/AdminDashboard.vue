@@ -82,7 +82,8 @@
 
 <script>
 import Chart from 'chart.js/auto';
-import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, onSnapshot } from "firebase/firestore"; 
+import { shallowRef } from 'vue';
 
 export default
 {
@@ -93,67 +94,103 @@ export default
         complaints_count: 0,
         pending_complaints_count: 0,
         in_process_complaints_count: 0,
-        closed_complaints_count: 0
+        closed_complaints_count: 0,
+        unsub_users: null,
+        unsub_complaints: null,
+        chart: null
     }),
     async mounted()
     {
         const ctx = document.getElementById('chart_canvas');
 
         // GET TOTAL USERS
-        let users = await getDocs(query(collection(this.$db, "users"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
-        this.registered_users_count = users.length;
+        if (this.unsub_users) this.unsub_users();
+        this.unsub_users = onSnapshot(query(collection(this.$db, "users")), async (snap) => 
+        {
+            let users = [];
+
+            snap.forEach((doc) => 
+            {
+                users.push(Object.assign({}, doc.data(), { id: doc.id }))
+            });
+
+            this.registered_users_count = users.length;
+        });
 
         // GET ALL COMPLAINTS
-        let complaints = await getDocs(query(collection(this.$db, "complaints"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
-
-        // FILTER DATA BASED ON STATUS
-        this.complaints_count = complaints.length;
-        this.pending_complaints_count = complaints.filter(complaint => complaint.status === 'pending').length;
-        this.in_process_complaints_count = complaints.filter(complaint => complaint.status === 'process').length;
-        this.closed_complaints_count = complaints.filter(complaint => complaint.status === 'closed').length;
-
-        let complaints_by_month = [0,0,0,0,0,0,0,0,0,0,0,0];
-
-        for (let complaint of complaints)
+        if (this.unsub_complaints) this.unsub_complaints();
+        this.unsub_complaints = onSnapshot(query(collection(this.$db, "complaints")), async (snap) => 
         {
-            complaints_by_month[new Date(complaint.date).getMonth()]++;
-        }
+            let complaints = [];
 
-        const myChart = new Chart(ctx, 
-        {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: '# of Complaints',
-                    data: complaints_by_month,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+            snap.forEach((doc) => 
+            {
+                complaints.push(Object.assign({}, doc.data(), { id: doc.id }))
+            });
+
+            // FILTER DATA BASED ON STATUS
+            this.complaints_count = complaints.length;
+            this.pending_complaints_count = complaints.filter(complaint => complaint.status === 'pending').length;
+            this.in_process_complaints_count = complaints.filter(complaint => complaint.status === 'process').length;
+            this.closed_complaints_count = complaints.filter(complaint => complaint.status === 'closed').length;
+
+            let complaints_by_month = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+            for (let complaint of complaints)
+            {
+                complaints_by_month[new Date(complaint.date).getMonth()]++;
+            }
+
+            if (this.chart)
+            {
+                this.chart.data.datasets[0].data = complaints_by_month;
+                this.chart.update();
+            }
+            else
+            {
+                this.chart = shallowRef(new Chart(ctx, 
+                {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: '# of Complaints',
+                            data: complaints_by_month,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                }
+                }));
             }
         });
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub_users) this.unsub_users();
+        if (this.unsub_complaints) this.unsub_complaints();
     }
 }
 </script>

@@ -121,7 +121,7 @@
 
 <script>
 import './AdminUsers.scss';
-import { collection, getDocs, query, doc, setDoc, deleteDoc, where } from "firebase/firestore"; 
+import { collection, getDocs, query, doc, setDoc, deleteDoc, where, onSnapshot } from "firebase/firestore"; 
 
 export default
 {
@@ -131,7 +131,8 @@ export default
         users: [],
         search: '',
         is_update_dialog: false,
-        update_data: null
+        update_data: null,
+        unsub: null
     }),
     computed:
     {
@@ -274,12 +275,25 @@ export default
         },
         async loadData()
         {
-            this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", true), where("role", "==", "Member"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+            // this.users = await getDocs(query(collection(this.$db, "users"), where("is_verified", "==", true), where("role", "==", "Member"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+            if (this.unsub) this.unsub();
+            this.unsub = onSnapshot(query(collection(this.$db, "users"), where("is_verified", "==", true), where("role", "==", "Member")), (snap) => {
+                this.users = [];
+                snap.forEach((doc) => {
+                    this.users.push(Object.assign({}, doc.data(), { id: doc.id }))
+                })
+            })
+            
         }
     },
     async created()
     {
         this.loadData();
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

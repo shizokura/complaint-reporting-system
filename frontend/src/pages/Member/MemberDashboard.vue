@@ -33,7 +33,7 @@
 
 <script>
 import './MemberDashboard.scss';
-import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, onSnapshot } from "firebase/firestore"; 
 
 export default
 {
@@ -44,7 +44,8 @@ export default
         pending_complaints: [],
         in_process_complaints: [],
         closed_complaints: [],
-        is_loading: true
+        is_loading: true,
+        unsub: null
     }),
     async mounted()
     {
@@ -56,12 +57,26 @@ export default
         {
             let user_data = JSON.parse(localStorage.getItem('user_data'));
             
-            this.all_complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
-            this.pending_complaints = this.all_complaints.filter(complaint => complaint.status === 'pending');
-            this.in_process_complaints = this.all_complaints.filter(complaint => complaint.status === 'process');
-            this.closed_complaints = this.all_complaints.filter(complaint => complaint.status === 'closed');
-            this.is_loading = false;
+            this.unsub = onSnapshot(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id)), (res) =>
+            {
+                this.all_complaints = res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id }));
+                this.pending_complaints = this.all_complaints.filter(complaint => complaint.status === 'pending');
+                this.in_process_complaints = this.all_complaints.filter(complaint => complaint.status === 'process');
+                this.closed_complaints = this.all_complaints.filter(complaint => complaint.status === 'closed');
+                this.is_loading = false;
+            });
+
+            // this.all_complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+            // this.pending_complaints = this.all_complaints.filter(complaint => complaint.status === 'pending');
+            // this.in_process_complaints = this.all_complaints.filter(complaint => complaint.status === 'process');
+            // this.closed_complaints = this.all_complaints.filter(complaint => complaint.status === 'closed');
+            // this.is_loading = false;
         }
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

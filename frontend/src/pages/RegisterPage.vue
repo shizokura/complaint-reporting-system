@@ -306,7 +306,8 @@ export default
             this.$q.loading.show();
             await signOut(this.$auth);
             localStorage.removeItem('user_data');
-            this.$router.push({ name: 'login' });
+            localStorage.removeItem('newly_registered');
+            await this.$router.push({ name: 'login' });
             this.$q.loading.hide();
         },
         getAge(birthDateString)
@@ -370,6 +371,25 @@ export default
                     throw error;
                 }
 
+                // validate if email or mobile number exists
+                let find_email = await getDocs(query(collection(this.$db, "users"), where("email", "==", this.email))).then(res => res.docs.length ? true : false);
+                let find_number = await getDocs(query(collection(this.$db, "users"), where("phone_number", "==", this.phone_number))).then(res => res.docs.length ? true : false);
+
+                if (find_email)
+                {
+                    const error = new Error("message");
+                    error.code = "auth/email-exists";
+                    throw error;
+                }
+
+                if (find_number)
+                {
+                    const error = new Error("message");
+                    error.code = "auth/number-exists";
+                    throw error;
+                }
+                
+                localStorage.setItem('newly_registered', "true");
                 let { user } = await createUserWithEmailAndPassword(this.$auth, this.email, this.password);
 
                 // Upload File
@@ -433,6 +453,8 @@ export default
             }
             catch (error)
             {
+                localStorage.removeItem('newly_registered');
+
                 const errorCode = error.code;
 
                 let message = null;
@@ -464,6 +486,14 @@ export default
                 else if (errorCode === 'auth/phone-limit')
                 {
                     message = 'Phone number should be 11 digits only.';
+                }
+                else if (errorCode === 'auth/email-exists')
+                {
+                    message = 'Email already exists.';
+                }
+                else if (errorCode === 'auth/number-exists')
+                {
+                    message = 'Phone number already exists.';
                 }
                 else
                 {

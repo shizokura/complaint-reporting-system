@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { query, orderBy, collection, getDocs, where } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, onSnapshot } from "firebase/firestore"; 
 
 export default
 {
@@ -50,7 +50,8 @@ export default
     data: () => 
     ({
         complaints: [],
-        search: ''
+        search: '',
+        unsub: null
     }),
     props:
     {
@@ -73,8 +74,18 @@ export default
             message: "Loading data..."
         });
         let user_data = JSON.parse(localStorage.getItem('user_data'));
-        this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
-        this.$q.loading.hide();
+        // this.complaints = await getDocs(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+
+        this.unsub = onSnapshot(query(collection(this.$db, "complaints"), orderBy("id_number"), where("user_id", "==", user_data.id)), (res) =>
+        {
+            this.complaints = res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id }));
+            this.$q.loading.hide();
+        });
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>

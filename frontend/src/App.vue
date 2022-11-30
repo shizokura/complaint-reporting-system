@@ -50,13 +50,22 @@ export default
                     user_data = Object.assign({}, user_data.data(), { id: user_data.id });
                     localStorage.setItem('user_data', JSON.stringify(user_data));
 
-                    if (user_data.role === 'Member')
+                    console.log(localStorage.getItem("newly_registered"));
+                    
+                    if (localStorage.getItem("newly_registered"))
                     {
-                        await this.$router.push({ name: 'member_dashboard' });
+                        localStorage.removeItem("newly_registered");
                     }
-                    else if (user_data.role === 'Admin')
+                    else
                     {
-                        await this.$router.push({ name: 'admin_dashboard' });
+                        if (user_data.role === 'Member')
+                        {
+                            await this.$router.push({ name: 'member_dashboard' });
+                        }
+                        else if (user_data.role === 'Admin')
+                        {
+                            await this.$router.push({ name: 'admin_dashboard' });
+                        }
                     }
                 }
             }

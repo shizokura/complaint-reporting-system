@@ -112,7 +112,7 @@
 <script>
 import './AdminLayout.scss';
 import { signOut } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, onSnapshot } from "firebase/firestore";
 import NotificationComponent from '../components/NotificationComponent.vue';
 
 export default
@@ -121,7 +121,8 @@ export default
     data: () => 
     ({
         leftDrawerOpen: true,
-        user_data: null
+        user_data: null,
+        unsub: null
     }),
     components: { NotificationComponent },
     async created()
@@ -138,8 +139,17 @@ export default
             this.$router.push({ name: 'admin_dashboard' });
         }
 
-        this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
-        console.log(this.user_data);
+        // this.user_data = await getDoc(doc(this.$db, "users", user_data.id)).then(doc => Object.assign({}, doc.data(), { id: doc.id }));
+        this.unsub = onSnapshot(
+            doc(this.$db, "users", user_data.id),
+            (doc) => {
+                this.user_data = Object.assign({}, doc.data(), { id: doc.id });
+                console.log(this.user_data);
+            },
+            (error) => {
+                // handle error
+            }
+        );
     },
     methods:
     {
@@ -163,6 +173,11 @@ export default
                 this.$q.loading.hide();
             }, 1000);
         }
+    },
+    beforeUnmount()
+    {
+        console.log("Unsub...");
+        if (this.unsub) this.unsub();
     }
 }
 </script>
