@@ -122,6 +122,10 @@ export default
                 if (last_data) this.form_data.id_number = last_data.id_number + 1;
                 else this.form_data.id_number = 1;
 
+                // validate
+                let exists = await getDocs(query(collection(this.$db, "complaints"), where('id_number', '==', this.form_data.id_number), limit('1'))).then(res => res.docs.length ? true : false);
+                if (exists) throw new Error('Please try again.');
+
                 // user id
                 let user_data = JSON.parse(localStorage.getItem('user_data'));
                 this.form_data.user_id = user_data.id;
