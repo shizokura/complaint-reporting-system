@@ -1,4 +1,5 @@
-import { collection, addDoc, doc, setDoc, increment, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, increment, getDocs, query, where, deleteDoc, getDoc } from "firebase/firestore";
+import CONFIG from 'app/config';
 
 export default
 {
@@ -19,6 +20,10 @@ export default
                 notification_count: increment(1)
             }, 
             { merge: true });
+
+            let data = await getDoc(doc(this.$db, "users", user_id)).then(data => Object.assign({}, data.data(), { id: data.id }));
+
+            await this.$axios.post(`${ CONFIG.API_URL }/notify`, { email: data.email, title, message });
         },
         async $_clearNotification({ user_id })
         {

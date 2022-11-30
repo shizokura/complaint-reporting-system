@@ -2,7 +2,7 @@
     <div class="login-container">
         <div class="login">
             <div class="login__title">Verification</div>
-            <div class="login__subtitle" style="margin-bottom: 50px;">Please check your enmail for a message with your code.</div>
+            <div class="login__subtitle" style="margin-bottom: 50px;">Please check your email for a message with your code.</div>
             <q-form
                 @submit="onSubmit"
                 class="q-gutter-md"

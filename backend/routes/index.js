@@ -8,6 +8,7 @@ const AdminController = require('../controllers/AdminController');
 router.post('/login', AccountController.login);
 router.post('/register', AccountController.register);
 router.post('/verify', AccountController.verify);
+router.post('/notify', AccountController.notify);
 
 // Admin
 router.post('/admin/list-users', AdminController.listUsers);

@@ -92,5 +92,46 @@ module.exports =
         });
 
         res.send(true);
+    },
+    async notify(req, res)
+    {
+        let email = req.body.email;
+        let title = req.body.title;
+        let message = req.body.message;
+
+        // send via email
+        var transporter = nodemailer.createTransport(
+        {
+            service: 'gmail',
+            auth: 
+            {
+                user: 'noreply.online.crs@gmail.com',
+                pass: 'rbmlqogeyqtpdylw'
+            }
+        });
+        
+        var mailOptions = 
+        {
+            from: 'noreply.online.crs@gmail.com',
+            to: email,
+            subject: `Online CRS - ${ title }`,
+            html: `<div>
+                <div>${ message }</div>
+            </div>`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info)
+        {
+            if (error) 
+            {
+                console.log(error);
+            } 
+            else 
+            {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        res.send(true);
     }
 }
