@@ -5,41 +5,91 @@
         </div>
         <div class="admin-container__header">User Data</div>
         <div class="admin-container__body">
+            <q-tabs
+                v-model="current_tab"
+                dense
+                class="text-grey"
+                active-color="primary"
+                indicator-color="primary"
+                align="justify"
+                narrow-indicator
+            >
+                <q-tab name="active" label="Active" />
+                <q-tab name="archived" label="Archived" />
+            </q-tabs>
+            <q-separator style="margin-bottom: 15px;" />
+
             <div class="table">
                 <div class="table__filter">
                     <div></div>
                     <q-input v-model="search" type="text" bg-color="white" filled placeholder="Search..." />
                 </div>
-                <div class="table__table">
-                    <q-markup-table separator="cell" flat>
-                        <thead>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-center">First Name</th>
-                                <th class="text-center">Last Name</th>
-                                <th class="text-center">Birthday</th>
-                                <th class="text-center">Gender</th>
-                                <th class="text-center">Phone no.</th>
-                                <th class="text-center"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(user, index) in users_filtered" :key="index">
-                                <td class="text-center">{{ index + 1 }}</td>
-                                <td class="text-center">{{ user.first_name }}</td>
-                                <td class="text-center">{{ user.last_name }}</td>
-                                <td class="text-center">{{ dateFormat(user.birthdate) }}</td>
-                                <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
-                                <td class="text-center">{{ user.phone_number }}</td>
-                                <td class="text-center">
-                                    <q-btn @click="setAdmin(user.id)" style="margin-right: 15px;" color="primary" label="Set As Admin" unelevated />
-                                    <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="View" unelevated />
-                                    <q-btn @click="remove(user.id)" color="red" label="Delete" unelevated />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </q-markup-table>
-                </div>
+                <q-tab-panels v-model="current_tab" animated>
+                    <q-tab-panel name="active">
+                        <div class="table__table">
+                            <q-markup-table separator="cell" flat>
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">First Name</th>
+                                        <th class="text-center">Last Name</th>
+                                        <th class="text-center">Birthday</th>
+                                        <th class="text-center">Gender</th>
+                                        <th class="text-center">Phone no.</th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(user, index) in users_filtered" :key="index">
+                                        <td class="text-center">{{ index + 1 }}</td>
+                                        <td class="text-center">{{ user.first_name }}</td>
+                                        <td class="text-center">{{ user.last_name }}</td>
+                                        <td class="text-center">{{ dateFormat(user.birthdate) }}</td>
+                                        <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
+                                        <td class="text-center">{{ user.phone_number }}</td>
+                                        <td class="text-center">
+                                            <q-btn @click="setAdmin(user.id)" style="margin-right: 15px;" color="primary" label="Set As Admin" unelevated />
+                                            <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="View" unelevated />
+                                            <q-btn @click="remove(user.id)" color="red" label="Delete" unelevated />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </q-markup-table>
+                        </div>
+                    </q-tab-panel>
+
+                    <q-tab-panel name="archived">
+                        <q-markup-table separator="cell" flat>
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">First Name</th>
+                                    <th class="text-center">Last Name</th>
+                                    <th class="text-center">Birthday</th>
+                                    <th class="text-center">Gender</th>
+                                    <th class="text-center">Phone no.</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(user, index) in users_archived" :key="index">
+                                    <td class="text-center">{{ index + 1 }}</td>
+                                    <td class="text-center">{{ user.first_name }}</td>
+                                    <td class="text-center">{{ user.last_name }}</td>
+                                    <td class="text-center">{{ dateFormat(user.birthdate) }}</td>
+                                    <td class="text-center">{{ user.gender || 'Unspecified' }}</td>
+                                    <td class="text-center">{{ user.phone_number }}</td>
+                                    <td class="text-center">
+                                        <!-- <q-btn @click="setAdmin(user.id)" style="margin-right: 15px;" color="primary" label="Set As Admin" unelevated /> -->
+                                        <q-btn @click="update(user)" style="margin-right: 15px;" color="primary" label="View" unelevated />
+                                        <!-- <q-btn @click="remove(user.id)" color="red" label="Delete" unelevated /> -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </q-markup-table>
+                    </q-tab-panel>
+                </q-tab-panels>
+                
             </div>
         </div>
 
@@ -132,13 +182,18 @@ export default
         search: '',
         is_update_dialog: false,
         update_data: null,
-        unsub: null
+        unsub: null,
+        current_tab: 'active'
     }),
     computed:
     {
         users_filtered()
         {
-            return this.users.filter(user => `${ user.first_name } ${ user.last_name }`.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
+            return this.users.filter(user => `${ user.first_name } ${ user.last_name }`.toLowerCase().indexOf(this.search.toLowerCase()) > -1 && !user.is_archived);
+        },
+        users_archived()
+        {
+            return this.users.filter(user => `${ user.first_name } ${ user.last_name }`.toLowerCase().indexOf(this.search.toLowerCase()) > -1 && user.is_archived);
         }
     },
     methods:
@@ -163,9 +218,8 @@ export default
                     message: 'Deleting user...'
                 });
 
-                await deleteDoc(doc(this.$db, "users", id));
-
-                this.users = this.users.filter(user => user.id !== id);
+                // await deleteDoc(doc(this.$db, "users", id));
+                await setDoc(doc(this.$db, "users", id), { is_archived: true }, { merge: true });
 
                 this.$q.notify(
                 {
