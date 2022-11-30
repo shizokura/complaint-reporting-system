@@ -25,7 +25,10 @@
             </div>
             <div class="admin-dashboard__title">Data Analytics</div>
             <div class="chart">
-                <canvas id="chart_canvas" width="100%" height="400"></canvas>
+                <canvas id="chart_canvas" width="100%"></canvas>
+            </div>
+            <div class="chart">
+                <canvas id="chart_categories_canvas" width="100%" height="400"></canvas>
             </div>
         </div>
     </div>
@@ -75,6 +78,7 @@
         .chart
         {
             margin-top: 25px;
+            height: 400px;
         }
     }
 }
@@ -97,11 +101,13 @@ export default
         closed_complaints_count: 0,
         unsub_users: null,
         unsub_complaints: null,
-        chart: null
+        chart: null,
+        chart_categories: null
     }),
     async mounted()
     {
         const ctx = document.getElementById('chart_canvas');
+        const ctx_categories = document.getElementById('chart_categories_canvas');
 
         // GET TOTAL USERS
         if (this.unsub_users) this.unsub_users();
@@ -135,16 +141,22 @@ export default
             this.closed_complaints_count = complaints.filter(complaint => complaint.status === 'closed').length;
 
             let complaints_by_month = [0,0,0,0,0,0,0,0,0,0,0,0];
+            let complaints_by_category = [0,0,0,0,0,0,0,0];
+            let categories = ['Communications', 'Humaneness/Caring', 'Institutional Issues', 'Patient Rights', 'Quality', 'Safety', 'Timing and Access', 'Environment'];
 
             for (let complaint of complaints)
             {
                 complaints_by_month[new Date(complaint.date).getMonth()]++;
+                let category = categories.findIndex(cat => cat === complaint.category);
+                if (category !== -1) complaints_by_category[category]++
             }
 
-            if (this.chart)
+            if (this.chart && this.chart_categories)
             {
                 this.chart.data.datasets[0].data = complaints_by_month;
+                this.chart_categories.data.datasets[0].data = complaints_by_category;
                 this.chart.update();
+                this.chart_categories.update();
             }
             else
             {
@@ -154,7 +166,7 @@ export default
                     data: {
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                         datasets: [{
-                            label: '# of Complaints',
+                            label: '# of Complaints Per Month',
                             data: complaints_by_month,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
@@ -180,7 +192,49 @@ export default
                             y: {
                                 beginAtZero: true
                             }
-                        }
+                        },
+                        maintainAspectRatio: false,
+                    }
+                }));
+
+                this.chart_categories = shallowRef(new Chart(ctx_categories, 
+                {
+                    type: 'bar',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            label: '# of Complaints Per Category',
+                            data: complaints_by_category,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(118, 37, 138, 0.2)',
+                                'rgba(177, 16, 46, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(118, 37, 138, 1)',
+                                'rgba(177, 16, 46, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        maintainAspectRatio: false,
                     }
                 }));
             }
