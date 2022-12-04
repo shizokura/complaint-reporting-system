@@ -62,7 +62,8 @@
 </template>
 
 <script>
-import { collection, getDocs, query, doc, setDoc, deleteDoc, where, onSnapshot } from "firebase/firestore"; 
+import { collection, getDocs, query, doc, setDoc, deleteDoc, where, onSnapshot } from "firebase/firestore";
+import CONFIG from 'app/config'; 
 
 export default
 {
@@ -94,6 +95,7 @@ export default
                 {
                     this.$q.loading.show();
                     await setDoc(doc(this.$db, "users", data.id), { is_verified: true }, { merge: true });
+                    await this.$axios.post(`${ CONFIG.API_URL }/notify`, { email: data.email, title: 'Account Registration', message: 'The administrator approved your registration in the Complaint Reporting System. You can now login and use your account.' });
                     await this.initialize();
                 }
                 catch (e)

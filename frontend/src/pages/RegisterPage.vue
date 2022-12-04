@@ -21,8 +21,8 @@
                     />
                 </div>
                 <div class="two-columns">
-                    <q-input v-model="birthdate" type="date" outlined hint="Date of Birth" />
-                    <q-input v-model="phone_number" type="number" outlined label="Phone no." />
+                    <q-input :max="`${ new Date().getFullYear() - 18 }-12-31`" v-model="birthdate" type="date" outlined hint="Date of Birth" />
+                    <q-input v-model="phone_number" type="text" mask="###########" outlined label="Phone no." />
                 </div>
                 <q-input v-model="address" type="text" outlined label="Complete Address" />
                 <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency" />
@@ -58,7 +58,7 @@
         </div>
 
         <q-dialog v-model="terms_dialog">
-            <q-card>
+            <q-card class="register-dialog">
                 <q-card-section>
                     <div class="text-h6">Terms of Agreement</div>
                 </q-card-section>
@@ -86,7 +86,7 @@
         </q-dialog>
 
         <q-dialog v-model="privacy_dialog">
-            <q-card>
+            <q-card class="register-dialog">
                 <q-card-section>
                     <div class="text-h6">Data Privacy Policy</div>
                 </q-card-section>
@@ -154,6 +154,11 @@ If you provide us or our service providers with Personal Information of other pe
     column-gap: 100px;
     background-image: url('/bg.svg');
     background-size: cover;
+}
+
+.register-dialog
+{
+    text-align: justify;
 }
 
 .login
@@ -442,6 +447,7 @@ export default
                 }));
 
                 await this.$axios.post(`${ CONFIG.API_URL }/verify`, { id: user.uid, code, email: this.email });
+                await this.$axios.post(`${ CONFIG.API_URL }/notify`, { email: this.email, title: 'Account Registration', message: 'You are now succesfully register in the Complaint Reporting System, please wait for the approval of the administrator.' });
 
                 this.$q.notify(
                 {
