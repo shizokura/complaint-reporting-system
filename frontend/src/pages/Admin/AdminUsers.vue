@@ -159,7 +159,11 @@
                             />
 
                             <div style="text-align: center;">
-                                <a :href="update_data.certificate_of_residency" target="_blank">View Certificate of Residency</a>
+                                <q-btn color="primary" unelevated target="_blank" :href="update_data.certification || update_data.certificate_of_residency">View Certification</q-btn>
+                            </div>
+
+                            <div v-if="update_data.identification" style="text-align: center;">
+                                <q-btn color="primary" unelevated target="_blank" :href="update_data.identification">View ID</q-btn>
                             </div>
 
                             <!-- <q-input

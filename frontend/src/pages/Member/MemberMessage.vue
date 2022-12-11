@@ -1,7 +1,7 @@
 <template>
     <div class="member-message">
         <div class="member-message__button">
-            <q-btn @click="create_message_dialog = true" color="primary" label="Create Message" unelevated no-caps />
+            <q-btn @click="add()" color="primary" label="Create Message" unelevated no-caps />
         </div>
         <div class="member-message__tab">
             <q-tabs
@@ -18,9 +18,10 @@
             <q-tab-panels style="background-color: #F1F1F1" v-model="tab" animated>
                 <q-tab-panel name="inbox">
                     <template v-if="inbox.length">
-                        <div class="item" v-for="(message, index) in inbox" :key="index">
+                        <div @click="view(message)" class="item" v-for="(message, index) in inbox" :key="index">
                             <div class="item__title">{{ message.from.name }}</div>
-                            <div class="item__text">{{ message.message }}</div>
+                            <div class="item__text">{{ message.subject }}</div>
+                            <div class="item__date" style="text-align: right; margin-top: -25px;">{{ new Date(message.date_created.seconds * 1000).toLocaleDateString() }} {{ new Date(message.date_created.seconds * 1000).toLocaleTimeString() }} </div>
                         </div>
                     </template>
                     <div v-else>
@@ -30,9 +31,10 @@
 
                 <q-tab-panel name="outbox">
                     <template v-if="outbox.length">
-                        <div class="item" v-for="(message, index) in outbox" :key="index">
+                        <div @click="view(message)" class="item" v-for="(message, index) in outbox" :key="index">
                             <div class="item__title">{{ message.to.name }}</div>
-                            <div class="item__text">{{ message.message }}</div>
+                            <div class="item__text">{{ message.subject }}</div>
+                            <div class="item__date" style="text-align: right; margin-top: -25px;">{{ new Date(message.date_created.seconds * 1000).toLocaleDateString() }} {{ new Date(message.date_created.seconds * 1000).toLocaleTimeString() }} </div>
                         </div>
                     </template>
                     <div v-else>
@@ -61,9 +63,36 @@
                             </template>
                         </q-select>
                         <q-input v-model="subject" label="Subject:" />
+                        <q-input v-model="number" label="File Case Number:" type="number" />
                         <q-input v-model="message" type="textarea" label="Create a message here..." />
                         <div style="text-align: right">
                             <q-btn @click="send()" label="Send" unelevated color="primary" no-caps />
+                        </div>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="view_message_dialog">
+            <q-card class="create-message">
+                <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">View Message</div>
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+                <q-card-section>
+                    <div class="create-message__form">
+                        <div>
+                            <label for="" style="font-weight: 600;">Subject</label>
+                            <q-input readonly v-model="subject" />
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <label for="" style="font-weight: 600;">File Case Number</label>
+                            <q-input readonly v-model="number" />
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <label for="" style="font-weight: 600;">Message</label>
+                            <q-input readonly v-model="message" type="textarea" />
                         </div>
                     </div>
                 </q-card-section>
@@ -74,7 +103,7 @@
 
 <script>
 import './MemberMessage.scss';
-import { getDocs, collection, addDoc, query, where, onSnapshot } from "firebase/firestore";
+import { getDocs, collection, addDoc, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 const types = ['inbox', 'outbox'];
 
@@ -90,6 +119,7 @@ export default
         users_filtered: [],
         to: null,
         subject: null,
+        number: null,
         message: null,
         inbox: [],
         outbox: [],
@@ -97,7 +127,8 @@ export default
         {
             inbox: null,
             outbox: null
-        }
+        },
+        view_message_dialog: false
     }),
     props:
     {
@@ -109,6 +140,20 @@ export default
     },
     methods:
     {
+        add()
+        {
+            this.create_message_dialog = true;
+            this.message = null,
+            this.number = null;
+            this.subject = null;
+        },
+        view({ message, subject, number })
+        {
+            this.message = message,
+            this.subject = subject;
+            this.number = number;
+            this.view_message_dialog = true;
+        },
         filterFn (val, update) 
         {
             if (val === '') 
@@ -151,13 +196,15 @@ export default
                         name: `${ this.to.first_name } ${ this.to.last_name }`
                     },
                     message: this.message,
+                    subject: this.subject,
+                    number: this.number,
                     date_created: new Date()
                 });
 
                 await this.$_createNotification(
                 { 
                     title: `New Message`, 
-                    message: `${ user_data.first_name } ${ user_data.last_name } has sent you a new message.`, 
+                    message: `${ user_data.first_name } ${ user_data.last_name } has sent you a new message. (File Case Number: ${ this.number })`, 
                     user_id: this.to.id
                 });
 
@@ -193,7 +240,7 @@ export default
 
             this.unsubscribe[type] = onSnapshot(q, (querySnapshot) => 
             {
-                this[type] = querySnapshot.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id }));
+                this[type] = querySnapshot.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })).sort((a,b) => b.date_created.seconds - a.date_created.seconds);
             });
         }
     },
@@ -203,7 +250,7 @@ export default
 
         let user_data = JSON.parse(localStorage.getItem('user_data'));
 
-        this.users = await getDocs(collection(this.$db, "users")).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })).filter(user => user.id !== user_data.id));
+        this.users = await getDocs(collection(this.$db, "users")).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })).filter(user => user.id !== user_data.id && !user_data.is_archived && user_data.is_verified && !user_data.is_rejected && user_data.is_email_verified));
     },
     unmounted()
     {

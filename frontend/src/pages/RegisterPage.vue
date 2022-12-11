@@ -25,7 +25,7 @@
                     <q-input v-model="phone_number" type="text" mask="###########" outlined label="Phone no." />
                 </div>
                 <q-input v-model="address" type="text" outlined label="Complete Address" />
-                <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency" />
+                <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency (maximum file size: 5mb)" hint="Allowed File: PDF or Image Only" accept="image/*, application/pdf" />
                 <q-input
                     outlined
                     type="email"

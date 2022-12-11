@@ -51,13 +51,15 @@
                 <div class="form-group">
                     <div class="form-group__label">Verification Identify</div>
                     <div class="form-group__input">
-                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID" filled />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID" filled accept="image/*, application/pdf" />
+                        <q-btn unelevated color="primary" style="margin-top: 15px; display: block;" v-if="(form_data.identification && typeof form_data.identification === 'string')" :href="form_data.identification" alt="" target="_blank">View ID</q-btn>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group__label">Certificate of Residency</div>
                     <div class="form-group__input">
-                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload" filled />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload" filled accept="image/*, application/pdf" />
+                        <q-btn unelevated color="primary" style="margin-top: 15px; display: block;" v-if="(form_data.certification && typeof form_data.certification === 'string')" :href="form_data.certification" alt="" target="_blank">View Certificate</q-btn>
                     </div>
                 </div>
                 <div v-if="$route.params.id ? false : true"  style="text-align: center;">
@@ -89,7 +91,8 @@ export default
             identification: null,
             certification: null,
             photo: null
-        }
+        },
+        user_data: null
     }),
     methods:
     {
@@ -151,9 +154,9 @@ export default
 
                 update_data.date_created = new Date();
 
-                if (this.form_data.identification) update_data.identification = await uploadFile(this.form_data.identification);
+                if (this.form_data.identification && typeof this.form_data.identification === 'object') update_data.identification = await uploadFile(this.form_data.identification);
                 else delete update_data.identification;
-                if (this.form_data.certification) update_data.certification = await uploadFile(this.form_data.certification);
+                if (this.form_data.certification && typeof this.form_data.certification === 'object') update_data.certification = await uploadFile(this.form_data.certification);
                 else delete update_data.certification;
 
                 this.$q.loading.show(
@@ -162,6 +165,8 @@ export default
                 });
 
                 let user_data = JSON.parse(localStorage.getItem('user_data'));
+
+                if (!update_data.photo) update_data.photo = null;
 
                 await setDoc(doc(this.$db, "users", user_data.id), update_data, { merge: true });
 
@@ -201,8 +206,8 @@ export default
         this.form_data.address = user_data.address;
         this.form_data.gender = user_data.gender ? user_data.gender : 'Male';
         this.form_data.photo = user_data.photo;
-        // this.form_data.identification = user_data.identification;
-        // this.form_data.certification = user_data.certification;
+        this.form_data.identification = user_data.identification;
+        this.form_data.certification = user_data.certification || user_data.certificate_of_residency;
     }
 }
 </script>
