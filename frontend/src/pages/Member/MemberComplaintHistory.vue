@@ -16,17 +16,19 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Complaint File #</th>
-                                <th class="text-center">Complaint Type</th>
-                                <th class="text-center">Creation date</th>
+                                <!-- <th class="text-center">Complaint Type</th> -->
+                                <th class="text-center">Creation Date</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody v-if="complaints.length">
                             <tr v-for="(complaint, index) in complaints_filtered" :key="index">
                                 <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
-                                <td class="text-center">{{ complaint.type }}</td>
+                                <!-- <td class="text-center">{{ complaint.type }}</td> -->
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>
+                                <td class="text-center"><q-btn :disabled="complaint.status !== 'closed' && complaint.status !== 'cancelled' ? false : true" @click="cancel(complaint)" label="Cancel" unelevated color="red" /></td>
                             </tr>
                         </tbody>
                         <tbody v-else>
@@ -42,7 +44,7 @@
 </template>
 
 <script>
-import { query, orderBy, collection, getDocs, where, onSnapshot } from "firebase/firestore"; 
+import { query, orderBy, collection, getDocs, where, onSnapshot, setDoc, doc } from "firebase/firestore"; 
 
 export default
 {
@@ -66,7 +68,21 @@ export default
     },
     methods:
     {
+        async cancel(data)
+        {
+            this.$q.loading.show();
 
+            if (data.status !== 'closed' && data.status !== 'cancelled')
+            {
+                await setDoc(doc(this.$db, "complaints", data.id),
+                {
+                    status: 'cancelled'
+                }, 
+                { merge: true });
+            }
+
+            this.$q.loading.hide();
+        }
     },
     async mounted()
     {

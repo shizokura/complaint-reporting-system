@@ -5,9 +5,9 @@
             <q-form @submit="submit()" class="form">
                 <div class="two-columns">
                     <div class="form-group">
-                        <div class="form-group__label">Complaint Type</div>
+                        <div class="form-group__label">Name of Complainee</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.id ? true : false" v-model="form_data.type" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="$route.params.id ? true : false" v-model="form_data.complainer" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
@@ -17,9 +17,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="form-group__label">Name of Complainants</div>
+                        <div class="form-group__label">Name of Complainant</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.id ? true : false"  v-model="form_data.name" dense bg-color="white" type="text" filled />
+                            <q-input readonly  v-model="form_data.name" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
@@ -35,16 +35,16 @@
                         <q-input :readonly="$route.params.id ? true : false"  v-model="form_data.details" dense bg-color="white" type="textarea" filled />
                     </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <div class="form-group__label">Complaint Relief</div>
                     <div class="form-group__input">
                         <q-input :readonly="$route.params.id ? true : false"  v-model="form_data.relief" dense bg-color="white" type="textarea" filled />
                     </div>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <div class="form-group__label">Complaint Proof or Related Documents</div>
                     <div class="form-group__input">
-                        <q-file v-if="!$route.params.id" v-model="form_data.proof" dense bg-color="white" type="file" label="Drop files to upload" filled />
+                        <q-file v-if="!$route.params.id" v-model="form_data.proof" dense bg-color="white" type="file" label="Drop files to upload (maximum file size: 5mb)" filled accept="image/*, application/pdf" />
                         <q-input v-else v-model="form_data.proof" dense bg-color="white" type="text" filled readonly />
                     </div>
                 </div>
@@ -71,12 +71,13 @@ export default
     ({
         form_data:
         {
-            type: '',
+            // type: '',
+            complainer: '',
             category: '',
             name: '',
             date: null,
             details: '',
-            relief: '',
+            // relief: '',
             proof: null,
             is_anonymous: false
         }
@@ -92,7 +93,7 @@ export default
                     message: 'Submitting data...'
                 });
 
-                if (!this.form_data.type || !this.form_data.category || !this.form_data.name || !this.form_data.name || !this.form_data.date || !this.form_data.details || !this.form_data.relief || !this.form_data.proof)
+                if (!this.form_data.complainer || !this.form_data.category || !this.form_data.name || !this.form_data.name || !this.form_data.date || !this.form_data.details || !this.form_data.proof)
                 {
                     throw new Error('Please fill up all fields');
                 }
@@ -188,6 +189,11 @@ export default
                 proof: this.$route.params.proof,
                 is_anonymous: this.$route.params.is_anonymous === "true" ? true : false
             }
+        }
+        else
+        {
+            let user_data = JSON.parse(localStorage.getItem('user_data'));
+            this.form_data.name = `${ user_data.first_name } ${ user_data.last_name }`;
         }
     }
 }

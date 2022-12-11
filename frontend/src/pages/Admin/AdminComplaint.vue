@@ -16,7 +16,7 @@
                             <tr>
                                 <th class="text-center">Complaint File #</th>
                                 <th class="text-center">Complainant</th>
-                                <th class="text-center">Complaint Type</th>
+                                <!-- <th class="text-center">Complaint Type</th> -->
                                 <th class="text-center">Creation date</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center"></th>
@@ -26,7 +26,7 @@
                             <tr v-for="(complaint, index) in complaints_filtered" :key="index">
                                 <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
                                 <td class="text-center">{{ complaint.name }}</td>
-                                <td class="text-center">{{ complaint.type }}</td>
+                                <!-- <td class="text-center">{{ complaint.type }}</td> -->
                                 <td class="text-center">{{ dateFormat(new Date(complaint.date_created.seconds * 1000)) }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ getStatus(complaint.status) }}</td>
                                 <td class="text-center"><q-btn @click="viewComplaint(index, complaint)" color="primary" label="View" unelevated /></td>
@@ -51,8 +51,12 @@
                                 <div class="item__value">{{ selected_data.id_number.toString().padStart(5, '0') }}</div>
                             </div>
                             <div class="item">
-                                <div class="item__label">Complaint Type:</div>
-                                <div class="item__value">{{ selected_data.type }}</div>
+                                <div class="item__label">Complainee Name:</div>
+                                <div class="item__value">{{ selected_data.complainer }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="item__label">Complaint Category:</div>
+                                <div class="item__value">{{ selected_data.category }}</div>
                             </div>
                             <div class="item">
                                 <div class="item__label">Complaint Date:</div>
@@ -70,10 +74,10 @@
                                 <div class="item__label">Complaint Proof:</div>
                                 <div class="item__value"><a :href="selected_data.proof" target="_blank">{{ selected_data.proof }}</a></div>
                             </div>
-                            <div class="item">
+                            <!-- <div class="item">
                                 <div class="item__label">Complaint Relief:</div>
                                 <div class="item__value">{{ selected_data.relief }}</div>
-                            </div>
+                            </div> -->
                             <div class="item">
                                 <div class="item__label">Complaint Status:</div>
                                 <div class="item__value">{{ getStatus(selected_data.status) }}</div>
