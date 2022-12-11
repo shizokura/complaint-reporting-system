@@ -51,14 +51,14 @@
                 <div class="form-group">
                     <div class="form-group__label">Verification Identify</div>
                     <div class="form-group__input">
-                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID" filled accept="image/*, application/pdf" />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.identification" dense bg-color="white" type="file" label="Upload ID (maximum file size: 5mb)" filled accept="image/*, application/pdf" />
                         <q-btn unelevated color="primary" style="margin-top: 15px; display: block;" v-if="(form_data.identification && typeof form_data.identification === 'string')" :href="form_data.identification" alt="" target="_blank">View ID</q-btn>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group__label">Certificate of Residency</div>
                     <div class="form-group__input">
-                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload" filled accept="image/*, application/pdf" />
+                        <q-file :readonly="$route.params.view ? true : false" v-model="form_data.certification" dense bg-color="white" type="file" label="Drop files to upload (maximum file size: 5mb)" filled accept="image/*, application/pdf" />
                         <q-btn unelevated color="primary" style="margin-top: 15px; display: block;" v-if="(form_data.certification && typeof form_data.certification === 'string')" :href="form_data.certification" alt="" target="_blank">View Certificate</q-btn>
                     </div>
                 </div>
@@ -133,6 +133,17 @@ export default
                 if (!this.form_data.first_name || !this.form_data.last_name || !this.form_data.birthdate || !this.form_data.gender || !this.form_data.phone_number || !this.form_data.address)
                 {
                     throw new Error('Please fill up all fields');
+                }
+
+                // validate size
+                if (typeof this.form_data.identification === 'object' && (this.form_data.identification.size  / 1024 / 1024) > 5)
+                {
+                    throw new Error('File size exceed (5mb only).');
+                }
+
+                if (typeof this.form_data.certification === 'object' && (this.form_data.certification.size  / 1024 / 1024) > 5)
+                {
+                    throw new Error('File size exceed (5mb only).');
                 }
 
                 this.$q.loading.show(
