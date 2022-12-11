@@ -393,6 +393,14 @@ export default
                     error.code = "auth/number-exists";
                     throw error;
                 }
+
+                // validate size
+                if ((this.certificate_of_residency.size  / 1024 / 1024) > 5)
+                {
+                    const error = new Error("message");
+                    error.code = "auth/size-exceed";
+                    throw error;
+                }
                 
                 localStorage.setItem('newly_registered', "true");
                 let { user } = await createUserWithEmailAndPassword(this.$auth, this.email, this.password);
@@ -500,6 +508,10 @@ export default
                 else if (errorCode === 'auth/number-exists')
                 {
                     message = 'Phone number already exists.';
+                }
+                else if (errorCode === 'auth/size-exceed')
+                {
+                    message = 'File size exceed (5mb only).';
                 }
                 else
                 {

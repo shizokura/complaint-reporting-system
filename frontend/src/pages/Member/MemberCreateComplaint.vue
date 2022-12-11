@@ -97,6 +97,12 @@ export default
                     throw new Error('Please fill up all fields');
                 }
 
+                // validate file size
+                if ((this.form_data.proof.size  / 1024 / 1024) > 5)
+                {
+                    throw new Error('File size exceed (5mb only).');
+                }
+
                 this.$q.loading.show(
                 {
                     message: 'Uploading Files...'
