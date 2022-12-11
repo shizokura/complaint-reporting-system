@@ -15,8 +15,9 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Complaint File #</th>
-                                <th class="text-center">Complaint Type</th>
-                                <th class="text-center">Creation date</th>
+                                <th class="text-center">Complaint Category</th>
+                                <th class="text-center">Complainee</th>
+                                <th class="text-center">Creation Date</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -24,7 +25,8 @@
                         <tbody v-if="complaints.length">
                             <tr v-for="(complaint, index) in complaints" :key="index">
                                 <td class="text-center">{{ complaint.id_number.toString().padStart(5, '0') }}</td>
-                                <td class="text-center">{{ complaint.type }}</td>
+                                <td class="text-center">{{ complaint.category }}</td>
+                                <td class="text-center">{{ complaint.complainer }}</td>
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>
                                 <td class="text-center action">

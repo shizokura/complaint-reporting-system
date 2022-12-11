@@ -187,7 +187,8 @@ export default
                 details: this.$route.params.details,
                 relief: this.$route.params.relief,
                 proof: this.$route.params.proof,
-                is_anonymous: this.$route.params.is_anonymous === "true" ? true : false
+                is_anonymous: this.$route.params.is_anonymous === "true" ? true : false,
+                complainer: this.$route.params.complainer
             }
         }
         else

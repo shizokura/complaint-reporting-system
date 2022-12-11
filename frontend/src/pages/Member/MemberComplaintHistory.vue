@@ -28,7 +28,10 @@
                                 <!-- <td class="text-center">{{ complaint.type }}</td> -->
                                 <td class="text-center">{{ complaint.date }}</td>
                                 <td class="text-center" style="text-transform: capitalize;">{{ complaint.status }}</td>
-                                <td class="text-center"><q-btn :disabled="complaint.status !== 'closed' && complaint.status !== 'cancelled' ? false : true" @click="cancel(complaint)" label="Cancel" unelevated color="red" /></td>
+                                <td class="text-center">
+                                    <q-btn style="margin-right: 15px;" @click="view(complaint)" label="View" unelevated color="primary" />
+                                    <q-btn :disabled="complaint.status !== 'closed' && complaint.status !== 'cancelled' ? false : true" @click="cancel(complaint)" label="Cancel" unelevated color="red" />
+                                </td>
                             </tr>
                         </tbody>
                         <tbody v-else>
@@ -68,20 +71,36 @@ export default
     },
     methods:
     {
+        view(data)
+        {
+            this.$router.push({ name: 'member_create_complaint', params: data });
+        },
         async cancel(data)
         {
-            this.$q.loading.show();
-
             if (data.status !== 'closed' && data.status !== 'cancelled')
             {
+                this.$q.loading.show();
+
                 await setDoc(doc(this.$db, "complaints", data.id),
                 {
                     status: 'cancelled'
                 }, 
                 { merge: true });
-            }
 
-            this.$q.loading.hide();
+                let admins = await getDocs(query(collection(this.$db, "users"), where("role", "==", "Admin"))).then(res => res.docs.map(doc => Object.assign({}, doc.data(), { id: doc.id })));
+                
+                await Promise.all(admins.map(async admin => 
+                {
+                    await this.$_createNotification(
+                    { 
+                        title: 'Complaint Cancelled',
+                        message: `Complaint #${ data.id_number } has been cancelled.`,
+                        user_id: admin.id
+                    });
+                }));
+
+                this.$q.loading.hide();
+            }
         }
     },
     async mounted()
