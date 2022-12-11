@@ -158,6 +158,19 @@
                                 :rules="[ val => val && val.length > 0 || 'Please type something']"
                             />
 
+                            <div style="text-align: center;">
+                                <a :href="update_data.certificate_of_residency" target="_blank">View Certificate of Residency</a>
+                            </div>
+
+                            <!-- <q-input
+                                readonly
+                                filled
+                                v-model=""
+                                label="Certificate of Residency"
+                                lazy-rules
+                                :rules="[ val => val && val.length > 0 || 'Please type something']"
+                            /> -->
+
                             <!-- <div style="text-align: right;">
                                 <q-btn label="Submit" type="submit" color="primary"/>
                             </div> -->
