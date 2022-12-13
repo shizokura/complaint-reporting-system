@@ -12,36 +12,36 @@
                     <q-input
                         outlined
                         v-model="first_name"
-                        label="First Name"
+                        label="First Name (required*)"
                     />
                     <q-input
                         outlined
                         v-model="last_name"
-                        label="Last Name"
+                        label="Last Name (required*)"
                     />
                 </div>
                 <div class="two-columns">
-                    <q-input :max="`${ new Date().getFullYear() - 18 }-12-31`" v-model="birthdate" type="date" outlined hint="Date of Birth" />
-                    <q-input v-model="phone_number" type="text" mask="###########" outlined label="Phone no." />
+                    <q-input :max="`${ new Date().getFullYear() - 18 }-12-31`" v-model="birthdate" type="date" outlined hint="Date of Birth (required*)" />
+                    <q-input v-model="phone_number" type="text" mask="###########" outlined label="Phone no. (required*)" />
                 </div>
-                <q-input v-model="address" type="text" outlined label="Complete Address" />
-                <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency (maximum file size: 5mb)" hint="Allowed File: PDF or Image Only" accept="image/*, application/pdf" />
+                <q-input v-model="address" type="text" outlined label="Complete Address (required*)" />
+                <q-file v-model="certificate_of_residency" outlined label="Upload Your Certificate of Residency (maximum file size: 5mb)" hint="Allowed File: PDF or Image Only (required*)" accept="image/*, application/pdf" />
                 <q-input
                     outlined
                     type="email"
                     v-model="email"
-                    label="Email"
+                    label="Email (required*)"
                 />
                 <q-input
                     outlined
                     v-model="password"
-                    label="Password"
+                    label="Password (required*)"
                     type="password"
                 />
                 <q-input
                     outlined
                     v-model="confirm_password"
-                    label="Confirm Password"
+                    label="Confirm Password (required*)"
                     type="password"
                 />
                 <div class="login__terms">
