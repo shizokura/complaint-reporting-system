@@ -12,13 +12,13 @@
                     <div class="form-group">
                         <div class="form-group__label">First name</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.first_name" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="true" v-model="form_data.first_name" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Last name</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.last_name" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="true" v-model="form_data.last_name" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                 </div>
@@ -26,19 +26,19 @@
                     <div class="form-group">
                         <div class="form-group__label">Date of Birth</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.birthdate" dense bg-color="white" type="date" filled />
+                            <q-input :readonly="true" v-model="form_data.birthdate" dense bg-color="white" type="date" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Gender</div>
                         <div class="form-group__input">
-                            <q-select :readonly="$route.params.view ? true : false" :options="[ 'Male', 'Female' ]" v-model="form_data.gender" dense bg-color="white" type="text" filled />
+                            <q-select :readonly="true" :options="[ 'Male', 'Female' ]" v-model="form_data.gender" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-group__label">Phone No.</div>
                         <div class="form-group__input">
-                            <q-input :readonly="$route.params.view ? true : false" v-model="form_data.phone_number" dense bg-color="white" type="text" filled />
+                            <q-input :readonly="true" v-model="form_data.phone_number" dense bg-color="white" type="text" filled />
                         </div>
                     </div>
                 </div>
